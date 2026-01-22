@@ -1,0 +1,137 @@
+[gd_scene load_steps=11 format=3 uid="uid://c0wahkitmgd2h"]
+
+[ext_resource type="Script" uid="uid://du8nj5eljfc6b" path="res://Scripts/Player/player_controller.cs" id="1_u00wg"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pgcxf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2j53v"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_u00wg"]
+material = SubResource("StandardMaterial3D_2j53v")
+radius = 0.2
+height = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vcg3l"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_uywod"]
+material = SubResource("StandardMaterial3D_vcg3l")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_2mkl6"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ykios"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ugga6"]
+radius = 0.2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bicot"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 5
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("WorldModel", "CollisionShape", "Head", "Camera", "CameraSmooth", "StairsAheadRayCast3d", "StairsBelowRayCast3d")]
+script = ExtResource("1_u00wg")
+WorldModel = NodePath("WorldModel")
+CollisionShape = NodePath("CollisionShape3D")
+Head = NodePath("HeadOriginalPosition/Head")
+Camera = NodePath("HeadOriginalPosition/Head/CameraSmooth/Camera3D")
+CameraSmooth = NodePath("HeadOriginalPosition/Head/CameraSmooth")
+StairsAheadRayCast3d = NodePath("StairsAheadRayCast3d")
+StairsBelowRayCast3d = NodePath("StairsBelowRayCast3d")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_pgcxf")
+
+[node name="WorldModel" type="Node3D" parent="."]
+
+[node name="Face" type="Node3D" parent="WorldModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.608, -0.5)
+
+[node name="Eye" type="MeshInstance3D" parent="WorldModel/Face"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.016, 0)
+mesh = SubResource("SphereMesh_u00wg")
+skeleton = NodePath("../..")
+
+[node name="Eye3" type="MeshInstance3D" parent="WorldModel/Face/Eye"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.104627)
+mesh = SubResource("SphereMesh_uywod")
+skeleton = NodePath("../../..")
+
+[node name="Eye2" type="MeshInstance3D" parent="WorldModel/Face"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.016, 0)
+mesh = SubResource("SphereMesh_u00wg")
+skeleton = NodePath("../..")
+
+[node name="Eye3" type="MeshInstance3D" parent="WorldModel/Face/Eye2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.104627)
+mesh = SubResource("SphereMesh_uywod")
+skeleton = NodePath("../../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WorldModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_2mkl6")
+
+[node name="HeadOriginalPosition" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79, 0)
+
+[node name="Head" type="Node3D" parent="HeadOriginalPosition"]
+
+[node name="CameraSmooth" type="Node3D" parent="HeadOriginalPosition/Head"]
+
+[node name="Camera3D" type="Camera3D" parent="HeadOriginalPosition/Head/CameraSmooth"]
+cull_mask = 1048573
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HeadOriginalPosition/Head/CameraSmooth/Camera3D"]
+transform = Transform3D(0.25, 0, 0, 0, -3.16908e-08, -0.25, 0, 0.725, -1.09278e-08, 0, 0, -0.5)
+layers = 2
+mesh = SubResource("CylinderMesh_ykios")
+
+[node name="InteractShapeCast3D" type="ShapeCast3D" parent="HeadOriginalPosition/Head/CameraSmooth/Camera3D"]
+shape = SubResource("SphereShape3D_ugga6")
+target_position = Vector3(0, 0, -2)
+max_results = 2
+collide_with_areas = true
+
+[node name="StairsAheadRayCast3d" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.75)
+target_position = Vector3(0, -0.55, 0)
+
+[node name="StairsBelowRayCast3d" type="RayCast3D" parent="."]
+target_position = Vector3(0, -0.75, 0)
+
+[node name="Temp_Player_HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+mouse_behavior_recursive = 1
+
+[node name="Panel" type="Panel" parent="Temp_Player_HUD"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+mouse_behavior_recursive = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_bicot")
