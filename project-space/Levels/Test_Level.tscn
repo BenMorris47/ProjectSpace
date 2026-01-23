@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://50himndbqeco"]
+[gd_scene load_steps=9 format=3 uid="uid://50himndbqeco"]
 
 [ext_resource type="PackedScene" uid="uid://c0wahkitmgd2h" path="res://Scenes/Player/playerController.tscn" id="1_s5mk4"]
+[ext_resource type="PackedScene" uid="uid://dixg0p43a1gbg" path="res://Utils/ladder.tscn" id="2_u46fl"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u46fl"]
 albedo_color = Color(0.5331748, 0.23993433, 0.044353373, 1)
@@ -49,3 +50,11 @@ environment = SubResource("Environment_u46fl")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
 shadow_enabled = true
+
+[node name="Ladder" parent="." instance=ExtResource("2_u46fl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.430354, 7.9999995, 9.280624)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9343262, 2.091858, -10.680002)
+use_collision = true
+size = Vector3(4.8686523, 5.183716, 1)

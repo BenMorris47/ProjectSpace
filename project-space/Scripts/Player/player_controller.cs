@@ -95,20 +95,6 @@ public partial class player_controller : CharacterBody3D
         return Input.IsActionPressed("sprint") ? sprint_speed : walk_speed;
     }
 
-    public override void _Ready()
-    {
-        base._Ready();
-        
-        _original_capsule_height = ((CapsuleShape3D)CollisionShape.Shape).Height;
-
-        foreach(VisualInstance3D child in WorldModel.FindChildren("*","VisualInstance3D"))
-        {
-            child.SetLayerMaskValue(1, false);
-            child.SetLayerMaskValue(2, true);
-        }
-        Input.MouseMode = Input.MouseModeEnum.Captured;
-    }
-
     public override void _UnhandledInput(InputEvent @event)
     {
         base._UnhandledInput(@event);
@@ -146,6 +132,98 @@ public partial class player_controller : CharacterBody3D
         }
     }
 
+    public override void _Ready()
+    {
+        base._Ready();
+        
+        _original_capsule_height = ((CapsuleShape3D)CollisionShape.Shape).Height;
+
+        foreach(VisualInstance3D child in WorldModel.FindChildren("*","VisualInstance3D"))
+        {
+            child.SetLayerMaskValue(1, false);
+            child.SetLayerMaskValue(2, true);
+        }
+        Input.MouseMode = Input.MouseModeEnum.Captured;
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        _handle_controller_look_input((float)delta);
+        if(IsOnFloor() && auto_align_to_floor_normal)
+        {
+            _handle_align_to_floor_normals((float)delta);
+        }
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+        float fDelta = (float)delta;
+
+        if (IsOnFloor()) {_last_frame_was_on_floor = Engine.GetPhysicsFrames();}
+        
+        Vector2 input_dir = Input.GetVector("left","right","up","down").Normalized();
+        if(local_movement)
+        {
+            wish_dir = new Vector3(input_dir.X,0,input_dir.Y); //When moving locally we rotate the velocity before moving so remove the rotation adjustments from here
+        }   
+        else
+        {
+            wish_dir = GlobalTransform.Basis * new Vector3(input_dir.X,0,input_dir.Y);
+        }
+
+        cam_aligned_wish_dir = Camera.GlobalTransform.Basis * new Vector3(input_dir.X,0,input_dir.Y);
+        
+        _handle_crouch(fDelta);
+        
+        if(!_handle_noclip(fDelta) && !_handle_ladder_physics(fDelta))
+        {
+            if (!_handle_water_physics(fDelta))
+            {
+                if (IsOnFloor() || _snapped_to_stairs_last_frame)
+                {
+                    _handle_ground_physics(fDelta);
+                    if( Input.IsActionJustPressed("jump") || (auto_bhop && Input.IsActionPressed("jump")))
+                    {
+                        Vector3 local_up = GlobalTransform.Basis.Y;
+                        Velocity += local_up * jump_velocity;
+                    }
+                        
+                }
+                else
+                {
+                    _handle_air_physics(fDelta);
+                }  
+                if(local_movement)
+                {
+                    Vector3 local_up = GlobalTransform.Basis.Y;
+                    UpDirection = local_up;
+                    //self.velocity = self.global_transform.basis * self.velocity
+                }
+                    
+            }
+        }
+            
+        bool snappedUp = false;
+        snappedUp = _snap_up_stairs_check(fDelta);
+        if(!snappedUp)
+        {
+            _push_away_ridgid_bodies();
+            MoveAndSlide();
+            _snap_down_to_stairs_check();
+        }
+            
+        _slide_camera_smooth_back_to_origin(fDelta);
+        
+        if (print_velocity_conversion)
+        {
+            Vector3 global_vel = GlobalTransform.Basis.Inverse() * Velocity;
+		    GD.Print("Local Velocity: ", Velocity, " -> Global Velocity: ", global_vel);
+        }
+            
+    } 
+
     void _headbob_effect(float delta)
     {
         headbob_time += delta * Velocity.Length();
@@ -179,16 +257,6 @@ void _handle_controller_look_input(float delta)
         Rotate(Transform.Basis.Y.Normalized(),-_cur_controller_look.X * controller_look_sensitivity); //Rotate around the local up
         Camera.RotateX(_cur_controller_look.Y * controller_look_sensitivity);
         Camera.Rotation = Camera.Rotation with { X = Mathf.Clamp(Camera.Rotation.X, Mathf.DegToRad(-90),Mathf.DegToRad(90)) };
-    }
-
-    public override void _Process(double delta)
-    {
-        base._Process(delta);
-        _handle_controller_look_input((float)delta);
-        if(IsOnFloor() && auto_align_to_floor_normal)
-        {
-            _handle_align_to_floor_normals((float)delta);
-        }
     }
 
     Vector3 _saved_camera_global_pos = Vector3.Inf;
@@ -556,7 +624,7 @@ void _handle_controller_look_input(float delta)
             float add_speed_till_cap = capped_speed - cur_speed_in_wish_dir;
             if (add_speed_till_cap > 0)
             {
-                var accel_speed = air_accel * air_move_speed * delta;
+                float accel_speed = air_accel * air_move_speed * delta;
                 accel_speed = Mathf.Min(accel_speed, add_speed_till_cap);
                 Velocity += accel_speed * adjusted_wish_dir;
             }
@@ -618,74 +686,5 @@ void _handle_controller_look_input(float delta)
           _headbob_effect(delta);
         } 
     }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        base._PhysicsProcess(delta);
-        float fDelta = (float)delta;
-
-        if (IsOnFloor()) {_last_frame_was_on_floor = Engine.GetPhysicsFrames();}
-        
-        Vector2 input_dir = Input.GetVector("left","right","up","down").Normalized();
-        if(local_movement)
-        {
-            wish_dir = new Vector3(input_dir.X,0,input_dir.Y); //When moving locally we rotate the velocity before moving so remove the rotation adjustments from here
-        }   
-        else
-        {
-            wish_dir = GlobalTransform.Basis * new Vector3(input_dir.X,0,input_dir.Y);
-        }
-
-        cam_aligned_wish_dir = Camera.GlobalTransform.Basis * new Vector3(input_dir.X,0,input_dir.Y);
-        
-        _handle_crouch(fDelta);
-        
-        if(!_handle_noclip(fDelta) && !_handle_ladder_physics(fDelta))
-        {
-            if (!_handle_water_physics(fDelta))
-            {
-                if (IsOnFloor() || _snapped_to_stairs_last_frame)
-                {
-                    _handle_ground_physics(fDelta);
-                    if( Input.IsActionJustPressed("jump") || (auto_bhop && Input.IsActionPressed("jump")))
-                    {
-                        Vector3 local_up = GlobalTransform.Basis.Y;
-                        Velocity += local_up * jump_velocity;
-                    }
-                        
-                }
-                else
-                {
-                    _handle_air_physics(fDelta);
-                }  
-                if(local_movement)
-                {
-                    Vector3 local_up = GlobalTransform.Basis.Y;
-                    UpDirection = local_up;
-                    //self.velocity = self.global_transform.basis * self.velocity
-                }
-                    
-            }
-        }
-            
-            
-        bool snappedUp = false;
-        snappedUp = _snap_up_stairs_check(fDelta);
-        if(!snappedUp)
-        {
-            _push_away_ridgid_bodies();
-            MoveAndSlide();
-            _snap_down_to_stairs_check();
-        }
-            
-        _slide_camera_smooth_back_to_origin(fDelta);
-        
-        if (print_velocity_conversion)
-        {
-            var global_vel = GlobalTransform.Basis.Inverse() * Velocity;
-		    GD.Print("Local Velocity: ", Velocity, " -> Global Velocity: ", global_vel);
-        }
-            
-    } 
 
 }
