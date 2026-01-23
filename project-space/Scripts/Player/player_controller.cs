@@ -64,9 +64,6 @@ public partial class player_controller : CharacterBody3D
     float _original_capsule_height;
     bool is_crouched = false;
 
-    [ExportCategory("Interaction")]
-    [Export] ShapeCast3D InteractShapeCast3D ;
-
     [ExportCategory("Ridgidbody Interaction")]
     [Export] float my_approx_mass_kg  = 80.0f;
     [Export] float push_force_mult  = 5.0f;
@@ -295,7 +292,7 @@ void _handle_controller_look_input(float delta)
         if (TestMove(step_pos_with_clearance, -local_up * (max_step_height * 2), down_check_result))
         {
             GodotObject collider = down_check_result.GetCollider();
-            if (collider != null && (collider is StaticBody3D || collider is CsgShape3D))
+            if (collider != null && (collider.IsClass("StaticBody3D") || collider.IsClass("CSGShape3D")))
             {
                 // Calculate step height based on local up direction
                 float step_height = (down_check_result.GetPosition() - GlobalPosition).Dot(local_up);

@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://c0wahkitmgd2h"]
+[gd_scene load_steps=12 format=3 uid="uid://c0wahkitmgd2h"]
 
 [ext_resource type="Script" uid="uid://du8nj5eljfc6b" path="res://Scripts/Player/player_controller.cs" id="1_u00wg"]
+[ext_resource type="Script" uid="uid://bihfj02odm4wc" path="res://Scripts/Interaction/InteractionManager.cs" id="2_uywod"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pgcxf"]
 
@@ -47,6 +48,11 @@ Camera = NodePath("HeadOriginalPosition/Head/CameraSmooth/Camera3D")
 CameraSmooth = NodePath("HeadOriginalPosition/Head/CameraSmooth")
 StairsAheadRayCast3d = NodePath("StairsAheadRayCast3d")
 StairsBelowRayCast3d = NodePath("StairsBelowRayCast3d")
+
+[node name="InteractionManager" type="Node" parent="." node_paths=PackedStringArray("InteractShapeCast3D", "Camera")]
+script = ExtResource("2_uywod")
+InteractShapeCast3D = NodePath("../HeadOriginalPosition/Head/CameraSmooth/Camera3D/InteractShapeCast3D")
+Camera = NodePath("../HeadOriginalPosition/Head/CameraSmooth/Camera3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

@@ -1,0 +1,1093 @@
+[gd_scene load_steps=53 format=3 uid="uid://voga7x77iqhw"]
+
+[ext_resource type="Texture2D" uid="uid://bi6ny26bsfrxq" path="res://Textures/GridTextures/Light/texture_08.png" id="1_sasra"]
+[ext_resource type="Texture2D" uid="uid://b48c4nayv0jhh" path="res://Textures/GridTextures/Green/texture_07.png" id="2_sasra"]
+[ext_resource type="PackedScene" uid="uid://bak8ltrhbmlv5" path="res://Utils/CSGStairMaker3D.tscn" id="4_2nij2"]
+[ext_resource type="Texture2D" uid="uid://biqqp48c3dbyd" path="res://Textures/GridTextures/Orange/texture_08.png" id="4_coq8p"]
+[ext_resource type="PackedScene" uid="uid://ca0wevg1lb4rx" path="res://Utils/WaterMaker3D/WaterMaker3D.tscn" id="6_7cbxl"]
+[ext_resource type="Texture2D" uid="uid://bn3mqe0sgq4wm" path="res://Textures/GridTextures/Purple/texture_12.png" id="7_8pr8v"]
+[ext_resource type="Script" uid="uid://dhfw3jfnf7t7h" path="res://Scripts/Interaction/InteractionComponent.cs" id="8_buypi"]
+[ext_resource type="PackedScene" uid="uid://dixg0p43a1gbg" path="res://Utils/ladder.tscn" id="9_njel3"]
+[ext_resource type="PackedScene" uid="uid://c0wahkitmgd2h" path="res://Scenes/Player/playerController.tscn" id="10_rpuu0"]
+[ext_resource type="Script" uid="uid://qe4maeg6n8l7" path="res://Scripts/Env/FloorAutoAlignTrigger.gd" id="10_vr1i5"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sasra"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_coq8p"]
+sky_material = SubResource("ProceduralSkyMaterial_sasra")
+
+[sub_resource type="Environment" id="Environment_2nij2"]
+background_mode = 1
+background_color = Color(0.111182, 0.320406, 0.394138, 1)
+background_energy_multiplier = 1.9
+sky = SubResource("Sky_coq8p")
+tonemap_mode = 2
+glow_enabled = true
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_coq8p"]
+albedo_texture = ExtResource("1_sasra")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2nij2"]
+albedo_texture = ExtResource("2_sasra")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4gito"]
+size = Vector3(29.644302, 51.47085, 30)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fbuy2"]
+size = Vector3(29.644302, 57.856033, 30)
+
+[sub_resource type="Curve3D" id="Curve3D_sasra"]
+_data = {
+"points": PackedVector3Array(-3.43715, 30.7283, 0, 3.43715, -30.7283, 0, -0.074337, 0.0664759, 0, -18.7071, 1.12694, 0, 18.7071, -1.12694, 0, 45.7183, -33.6024, 0),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7cbxl"]
+albedo_texture = ExtResource("4_coq8p")
+uv1_triplanar = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8pr8v"]
+resource_local_to_scene = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_buypi"]
+resource_local_to_scene = true
+noise = SubResource("FastNoiseLite_8pr8v")
+seamless = true
+as_normal_map = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_njel3"]
+resource_local_to_scene = true
+noise = SubResource("FastNoiseLite_8pr8v")
+seamless = true
+as_normal_map = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vr1i5"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+depth_draw_mode = 1
+albedo_color = Color(0.30980393, 0.5411765, 0.8666667, 0.3882353)
+roughness = 0.0
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_buypi")
+refraction_enabled = true
+refraction_texture = SubResource("NoiseTexture2D_njel3")
+uv1_scale = Vector3(0.04, 0.04, 0.04)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7cbxl"]
+resource_local_to_scene = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8pr8v"]
+resource_local_to_scene = true
+noise = SubResource("FastNoiseLite_7cbxl")
+seamless = true
+as_normal_map = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_vr1i5"]
+resource_local_to_scene = true
+noise = SubResource("FastNoiseLite_7cbxl")
+seamless = true
+as_normal_map = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rpuu0"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+depth_draw_mode = 1
+albedo_color = Color(0.30980393, 0.5411765, 0.8666667, 0.3882353)
+roughness = 0.0
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_8pr8v")
+refraction_enabled = true
+refraction_texture = SubResource("NoiseTexture2D_vr1i5")
+uv1_scale = Vector3(0.04, 0.04, 0.04)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_7cbxl"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_8pr8v"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4gito"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_buypi"]
+radius = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_njel3"]
+radius = 2.0
+height = 4.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vr1i5"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_rpuu0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oo8pe"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4gito"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="GDScript" id="GDScript_njel3"]
+script/source = "extends AnimatableBody3D
+
+@export var open : bool = false :
+	set(v):
+		if v != open:
+			open = v
+			update_door()
+
+func update_door():
+	if open:
+		$AnimationPlayer.play(\"open\")
+	else:
+		$AnimationPlayer.play_backwards(\"open\")
+	$AnimationPlayer.set_active(true)
+
+func toggle_open():
+	open = !open
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_buypi"]
+size = Vector3(0.647, 2.451, 2.607)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_njel3"]
+albedo_texture = ExtResource("7_8pr8v")
+uv1_scale = Vector3(2.99, 2, 3.32)
+uv1_offset = Vector3(0.005, 0, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vr1i5"]
+material = SubResource("StandardMaterial3D_njel3")
+size = Vector3(0.647, 2.451, 2.607)
+
+[sub_resource type="Animation" id="Animation_rpuu0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_vr1i5"]
+resource_name = "open"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -1.5708, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_oo8pe"]
+_data = {
+&"RESET": SubResource("Animation_rpuu0"),
+&"open": SubResource("Animation_vr1i5")
+}
+
+[sub_resource type="GDScript" id="GDScript_buypi"]
+script/source = "extends StaticBody3D
+"
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_rpuu0"]
+radius = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oo8pe"]
+shading_mode = 0
+albedo_color = Color(0.700451, 0.0649368, 0.197899, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_4gito"]
+radius = 0.25
+height = 0.5
+
+[sub_resource type="Animation" id="Animation_njel3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:material_override:albedo_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.700451, 0.0649368, 0.197899, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_buypi"]
+resource_name = "interact"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:material_override:albedo_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.266667, 0.666667, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(2.88785e-06, 0.609719, 0.242826, 1), Color(2.88785e-06, 0.609719, 0.242826, 1), Color(3.60981e-07, 0.458559, 0.175099, 1), Color(0.686987, 0.117243, 0.185608, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vr1i5"]
+_data = {
+&"RESET": SubResource("Animation_njel3"),
+&"interact": SubResource("Animation_buypi")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_buypi"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_njel3"]
+size = Vector3(1.505, 1.7, 1.108)
+
+[node name="TestScene" type="Node3D"]
+
+[node name="GameManager" type="Node" parent="."]
+
+[node name="Players" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 3)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2nij2")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+material_override = SubResource("StandardMaterial3D_coq8p")
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(100, 1, 100)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.7737, 13.4055, 22.2563)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(51.5474, 46.811, 6.59033)
+
+[node name="CSGBox3D30" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.8988085, 54.358116, 18.034163)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(16.066317, 36.229233, 2.399169)
+
+[node name="CSGBox3D18" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7496, 3.7622, 22.2288)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(16.906, 27.5244, 6.64526)
+
+[node name="CSGBox3D19" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.133711, 9.98304, 17.4144)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(14.0702, 1.02026, 3.57507)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.08868, 36.7617, 38.3794)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(58.9174, 3.81287, 59.2623)
+
+[node name="CSGBox3D27" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.104288, 123.85318, 4.1681576)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(49.8314, 0.8600483, 10.211254)
+
+[node name="CSGBox3D28" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-1.8188157e-08, 1, 0, -0.4160965, -4.371139e-08, 0, 0, 0, 1, -11.122139, 97.83179, 4.670577)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(104.35263, 0.8600483, 10.211254)
+
+[node name="CSGBox3D29" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.4160965, 0, 0, 0, 1, 0, 0, 0, 1, -9.559475, 75.8649, 4.670577)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(67.02395, 0.8600483, 10.211254)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.72207, 1.78857, 2.69247)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(10.3617, 4.57715, 11.8373)
+
+[node name="CSGBox3D20" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.67124, 5.60278, 5.35936)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(0.658296, 3.85986, 2.96488)
+
+[node name="CSGBox3D26" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.67124, 6.98697, 2.67965)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(0.658296, 0.96283, 2.96488)
+
+[node name="CSGBox3D23" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.6345, 5.60278, 6.6018)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(6.58489, 3.85986, 0.479998)
+
+[node name="CSGBox3D24" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.8054, 5.60278, 2.70593)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(0.849468, 3.85986, 8.27174)
+
+[node name="CSGBox3D25" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.776, 7.42249, 2.70593)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(6.90813, 0.220459, 8.27174)
+
+[node name="CSGBox3D21" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.67124, 5.60278, -0.135738)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(0.658296, 3.85986, 2.96488)
+
+[node name="CSGBox3D22" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8649, 5.60278, -1.42286)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(6.73268, 3.85986, 0.390643)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.323, 3.03407, 2.69247)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(10.3617, 2.08615, 11.8373)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.8738, -17.1033, -10.0958)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(23.0646, 35.8445, 4.75215)
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.0521, -17.3156, -30.0557)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(1.85505, 35.4198, 44.672)
+
+[node name="CSGBox3D17" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 62.7641, -34.0313, -30.0557)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(29.1881, 4.15111, 44.672)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 53.4395, -17.2285, -51.7888)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(39.9332, 35.5941, 4.75215)
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 74.5617, -17.0062, -30.8731)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(5.54979, 36.0388, 46.5837)
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 10.9558, 4.06616, 16.5289)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(7.62726, 1.9492, 11.8373)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, -0.498987, -0.866609, 0, 0.866609, -0.498987, 10.9558, 12.9087, 18.4326)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(7.62726, 2.08615, 7.94718)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 502.726, -273.001, 24.1982)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(151.108, 3.81287, 161.269)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 474.471, 315.637, 24.1982)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(151.108, 3.81287, 161.269)
+
+[node name="CSGStairMaker3D" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, 1.78016, 0, 0, 0, 1, -7.44455, 2.28964, 6.71804)
+size = Vector3(6.6333, 2.01801, 3.97083)
+num_stairs = 9
+
+[node name="CSGStairMaker3D10" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, 1.78016, 0, 0, 0, 1, -7.44455, 2.28964, -8.95753)
+size = Vector3(6.6333, 2.01801, 3.97083)
+num_stairs = 16
+
+[node name="CSGStairMaker3D12" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, 1.78016, 0, 0, 0, 1, -7.44455, 2.28964, -14.6026)
+size = Vector3(6.6333, 2.01801, 3.97083)
+num_stairs = 23
+
+[node name="CSGStairMaker3D11" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -7.78134e-08, 1, 0, -1.78016, -4.37114e-08, -8.82367, 6.72809, 13.7466)
+size = Vector3(6.6333, 2.01801, 3.97083)
+num_stairs = 16
+
+[node name="CSGStairMaker3D2" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, 1.78016, 0, 0, 0, 1, -4.79992, 2.28964, 2.71977)
+size = Vector3(3.11792, 2.01801, 3.97083)
+num_stairs = 9
+
+[node name="CSGStairMaker3D3" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, 1.78016, 0, 0, 0, 1, -5.86382, 2.28964, -1.24742)
+size = Vector3(4.5321, 2.01801, 3.97083)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -9.06544, 6.33101, 17.7494)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(10.3617, 4.57715, 11.8373)
+
+[node name="CSGStairMaker3D4" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -7.78134e-08, 1, 0, -1.78016, -4.37114e-08, -19.2321, 10.3566, 17.2484)
+size = Vector3(6.6333, 2.01801, 3.97083)
+num_stairs = 9
+
+[node name="CSGStairMaker3D13" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(-6.576816e-08, -7.7813304e-08, 1.0000001, -1.5046, 3.4013273e-15, -4.371139e-08, 0, -1.7801602, -4.3711402e-08, -9.045382, 24.470736, 16.830458)
+size = Vector3(4.2266064, 3.7709947, 6.6719065)
+num_stairs = 16
+
+[node name="CSGStairMaker3D14" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, 1.78016, 0, 0, 0, 1, -8.17913, 4.17294, -18.6143)
+size = Vector3(5.6329, 4.41113, 3.97083)
+num_stairs = 18
+
+[node name="CSGStairMaker3D5" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -7.78134e-08, 1, 0, -1.78016, -4.37114e-08, -16.5874, 6.35831, 17.2484)
+size = Vector3(3.11792, 2.01801, 3.97083)
+num_stairs = 9
+
+[node name="CSGStairMaker3D6" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -7.78134e-08, 1, 0, -1.78016, -4.37114e-08, -17.6513, 2.39112, 17.2484)
+size = Vector3(4.5321, 2.01801, 3.97083)
+
+[node name="CSGStairMaker3D15" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -1.78016, -8.74228e-08, 0, 1.55627e-07, -1, -8.82367, 29.6259, 42.4072)
+size = Vector3(6.6333, 2.01801, 3.97083)
+num_stairs = 16
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, -1, -8.74228e-08, 0, 8.74228e-08, -1, -9.06544, 33.6287, 42.8043)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(10.3617, 4.57715, 11.8373)
+
+[node name="CSGStairMaker3D16" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -1.78016, -8.74228e-08, 0, 1.55627e-07, -1, -19.2321, 33.1277, 38.7787)
+size = Vector3(6.6333, 2.01801, 3.97083)
+num_stairs = 9
+
+[node name="CSGStairMaker3D17" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -1.78016, -8.74228e-08, 0, 1.55627e-07, -1, -16.5045, 30.9977, 27.6028)
+size = Vector3(5.6329, 4.41113, 3.97083)
+num_stairs = 18
+
+[node name="CSGStairMaker3D18" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -1.78016, -8.74228e-08, 0, 1.55627e-07, -1, -17.6513, 33.1277, 46.7442)
+size = Vector3(4.5321, 2.01801, 3.97083)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, -1, -8.74228e-08, 0, 8.74228e-08, -1, -9.06544, 33.5714, 14.7705)
+material_override = SubResource("StandardMaterial3D_2nij2")
+size = Vector3(10.3617, 4.57715, 11.8373)
+
+[node name="CSGStairMaker3D7" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -1.78016, -8.74228e-08, 0, 1.55627e-07, -1, -19.2321, 33.0703, 10.745)
+size = Vector3(6.6333, 2.01801, 3.97083)
+num_stairs = 9
+
+[node name="CSGStairMaker3D8" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -1.78016, -8.74228e-08, 0, 1.55627e-07, -1, -16.5874, 33.0704, 14.7432)
+size = Vector3(3.11792, 2.01801, 3.97083)
+num_stairs = 9
+
+[node name="CSGStairMaker3D9" parent="CSGCombiner3D" instance=ExtResource("4_2nij2")]
+transform = Transform3D(1.5046, 0, 0, 0, -1.78016, -1.50996e-07, 0, 2.68797e-07, -1, -17.6513, 33.0704, 18.7104)
+size = Vector3(4.5321, 2.01801, 3.97083)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 22.38295, 111.0381, 4.2948365)
+radius = 15.0
+height = 40.0
+sides = 10
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="CSGCombiner3D/CSGCylinder3D"]
+operation = 2
+radius = 13.0
+height = 41.0
+sides = 20
+
+[node name="Area3D" type="Area3D" parent="CSGCombiner3D/CSGCylinder3D"]
+script = ExtResource("10_vr1i5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCombiner3D/CSGCylinder3D/Area3D"]
+transform = Transform3D(1, 3.5527137e-15, 0, -3.5527137e-15, 1, 0, 0, 0, 1, 2.2731476, -4.99724, -0.49605703)
+shape = SubResource("BoxShape3D_4gito")
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.364017, 68.79127, 4.2948365)
+radius = 15.0
+height = 60.490723
+sides = 10
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="CSGCombiner3D/CSGCylinder3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6280136, 0)
+operation = 2
+radius = 13.0
+height = 64.78662
+sides = 20
+
+[node name="Area3D" type="Area3D" parent="CSGCombiner3D/CSGCylinder3D2"]
+script = ExtResource("10_vr1i5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCombiner3D/CSGCylinder3D2/Area3D"]
+transform = Transform3D(1, 3.5527137e-15, 0, -3.5527137e-15, 1, 0, 0, 0, 1, 0.7934799, -0.008049011, -0.49605703)
+shape = SubResource("BoxShape3D_fbuy2")
+
+[node name="Surf paths" type="Node3D" parent="."]
+
+[node name="Path3D" type="Path3D" parent="Surf paths"]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 50.4205, 0.130897, 0.134676)
+curve = SubResource("Curve3D_sasra")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Surf paths/Path3D"]
+use_collision = true
+polygon = PackedVector2Array(0, 0, 0.5, 1, 1, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_7cbxl")
+
+[node name="Path3D4" type="Path3D" parent="Surf paths"]
+transform = Transform3D(-7.9999986, -6.993822e-07, 0, 6.993821e-07, -8, 0, 0, 0, 7.9999986, 407.2635, -144.11534, 0.134676)
+curve = SubResource("Curve3D_sasra")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Surf paths/Path3D4"]
+use_collision = true
+polygon = PackedVector2Array(0, 0, 0.5, 1, 1, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_7cbxl")
+
+[node name="Path3D2" type="Path3D" parent="Surf paths"]
+transform = Transform3D(8, 0, 0, 0, -3.49691e-07, 8, 0, -8, -3.49691e-07, 15.3524, 17.2376, 19.5154)
+curve = SubResource("Curve3D_sasra")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Surf paths/Path3D2"]
+use_collision = true
+polygon = PackedVector2Array(0, 0, 0.5, 1, 1, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_7cbxl")
+
+[node name="Path3D3" type="Path3D" parent="Surf paths"]
+transform = Transform3D(8, 0, 0, 0, -8, -6.99382e-07, 0, 6.99382e-07, -8, 21.7386, 35.5013, 43.2995)
+curve = SubResource("Curve3D_sasra")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Surf paths/Path3D3"]
+use_collision = true
+polygon = PackedVector2Array(0, 0, 0.5, 1, 1, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_7cbxl")
+
+[node name="Water" type="Node3D" parent="."]
+
+[node name="WaterMaker3D" parent="Water" instance=ExtResource("6_7cbxl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.3761, -17.0501, -30.2369)
+size = Vector3(22.8965, 34.5516, 37.8696)
+material = SubResource("StandardMaterial3D_vr1i5")
+
+[node name="WaterMaker3D2" parent="Water" instance=ExtResource("6_7cbxl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.67314, 5.25982, 17.3836)
+size = Vector3(11.8361, 9.83374, 3.33313)
+material = SubResource("StandardMaterial3D_rpuu0")
+
+[node name="RigidBall Small" type="RigidBody3D" parent="."]
+transform = Transform3D(0.0935002, 0, 0.995619, 0, 1, 0, -0.995619, 0, 0.0935002, 30.1329, 1.04923, 23.2824)
+mass = 50.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBall Small"]
+shape = SubResource("SphereShape3D_7cbxl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBall Small"]
+mesh = SubResource("SphereMesh_8pr8v")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="RigidBall Small"]
+replication_config = SubResource("SceneReplicationConfig_4gito")
+
+[node name="RigidBall Small2" type="RigidBody3D" parent="."]
+transform = Transform3D(0.0935002, 0, 0.995619, 0, 1, 0, -0.995619, 0, 0.0935002, 29.306835, 1.04923, 20.342539)
+mass = 50.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBall Small2"]
+shape = SubResource("SphereShape3D_7cbxl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBall Small2"]
+mesh = SubResource("SphereMesh_8pr8v")
+
+[node name="RigidBall Small3" type="RigidBody3D" parent="."]
+transform = Transform3D(0.0935002, 0, 0.995619, 0, 1, 0, -0.995619, 0, 0.0935002, 31.659267, 1.04923, 20.342539)
+mass = 50.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBall Small3"]
+shape = SubResource("SphereShape3D_7cbxl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBall Small3"]
+mesh = SubResource("SphereMesh_8pr8v")
+
+[node name="RigidBall Big" type="RigidBody3D" parent="."]
+transform = Transform3D(0.0935002, 0, 0.995619, 0, 1, 0, -0.995619, 0, 0.0935002, 26.4791, 2.82405, 23.6332)
+mass = 200.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBall Big"]
+shape = SubResource("SphereShape3D_buypi")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBall Big"]
+mesh = SubResource("SphereMesh_njel3")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="RigidBall Big"]
+replication_config = SubResource("SceneReplicationConfig_4gito")
+
+[node name="RigidCube Small" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.7426, 1.0667, 24.0279)
+mass = 50.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidCube Small"]
+shape = SubResource("BoxShape3D_vr1i5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidCube Small"]
+mesh = SubResource("BoxMesh_rpuu0")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="RigidCube Small"]
+replication_config = SubResource("SceneReplicationConfig_4gito")
+
+[node name="RigidCube Big" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.9459, 1.57882, 24.0279)
+mass = 200.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidCube Big"]
+shape = SubResource("BoxShape3D_oo8pe")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidCube Big"]
+mesh = SubResource("BoxMesh_4gito")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="RigidCube Big"]
+replication_config = SubResource("SceneReplicationConfig_4gito")
+
+[node name="Door" type="AnimatableBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.70296, 4.11188, 1.35225)
+script = SubResource("GDScript_njel3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0404663, 1.17932, 1.30347)
+shape = SubResource("BoxShape3D_buypi")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Door"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0404663, 1.17932, 1.30347)
+mesh = SubResource("BoxMesh_vr1i5")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Door"]
+libraries = {
+&"": SubResource("AnimationLibrary_oo8pe")
+}
+
+[node name="Button" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.41128, 5.46493, 5.16264)
+script = SubResource("GDScript_buypi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Button"]
+shape = SubResource("SphereShape3D_rpuu0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Button"]
+material_override = SubResource("StandardMaterial3D_oo8pe")
+mesh = SubResource("SphereMesh_4gito")
+
+[node name="InteractableComponent" type="Node" parent="Button"]
+script = ExtResource("8_buypi")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Button"]
+libraries = {
+&"": SubResource("AnimationLibrary_vr1i5")
+}
+
+[node name="InteractOutline" type="CSGSphere3D" parent="Button"]
+transform = Transform3D(0.216, 0, 0, 0, 0.52, 0, 0, 0, 0.52, -0.139022, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_buypi")
+
+[node name="Button2" type="StaticBody3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 8.91483, 5.46493, 5.16264)
+script = SubResource("GDScript_buypi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Button2"]
+shape = SubResource("SphereShape3D_rpuu0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Button2"]
+material_override = SubResource("StandardMaterial3D_oo8pe")
+mesh = SubResource("SphereMesh_4gito")
+
+[node name="InteractableComponent" type="Node" parent="Button2"]
+script = ExtResource("8_buypi")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Button2"]
+libraries = {
+&"": SubResource("AnimationLibrary_vr1i5")
+}
+
+[node name="InteractOutline" type="CSGSphere3D" parent="Button2"]
+transform = Transform3D(0.216, 0, 0, 0, 0.52, 0, 0, 0, 0.52, -0.139022, 0, 0)
+material_override = SubResource("StandardMaterial3D_buypi")
+
+[node name="Button3" type="StaticBody3D" parent="."]
+transform = Transform3D(4.37114e-08, -1, 3.82137e-15, -1, -4.37114e-08, -8.74228e-08, 8.74228e-08, 0, -1, -4.68806, 8.62473, 13.4916)
+script = SubResource("GDScript_buypi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Button3"]
+shape = SubResource("SphereShape3D_rpuu0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Button3"]
+material_override = SubResource("StandardMaterial3D_oo8pe")
+mesh = SubResource("SphereMesh_4gito")
+
+[node name="InteractableComponent" type="Node" parent="Button3"]
+script = ExtResource("8_buypi")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Button3"]
+libraries = {
+&"": SubResource("AnimationLibrary_vr1i5")
+}
+
+[node name="InteractOutline" type="CSGSphere3D" parent="Button3"]
+transform = Transform3D(0.216, 0, 0, 0, 0.52, 0, 0, 0, 0.52, -0.139022, 0, 0)
+material_override = SubResource("StandardMaterial3D_buypi")
+
+[node name="Ladder" parent="." instance=ExtResource("9_njel3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.406816, 0.607656, -21.1195)
+
+[node name="Ladder3" parent="." instance=ExtResource("9_njel3")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.84335, 0.607656, -18.1934)
+
+[node name="Ladder5" parent="." instance=ExtResource("9_njel3")]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, -3.84335, 27.3306, 25.5424)
+
+[node name="Ladder2" parent="." instance=ExtResource("9_njel3")]
+transform = Transform3D(-4.37114e-08, 0, 1, -1, -4.37114e-08, -4.37114e-08, 4.37114e-08, -1, 1.91069e-15, -3.91609, 33.647, 16.3813)
+
+[node name="Ladder6" parent="." instance=ExtResource("9_njel3")]
+transform = Transform3D(1, 4.37114e-08, 1.0658141e-14, -1.0658141e-14, 1.910686e-15, 1, 4.37114e-08, -1, 1.91069e-15, -10.186262, 38.578224, 16.30751)
+
+[node name="Ladder4" parent="." instance=ExtResource("9_njel3")]
+transform = Transform3D(-1, -4.37114e-08, -8.74228e-08, 8.74228e-08, 1.91069e-15, -1, 4.37114e-08, -1, 1.91069e-15, 9.79707, 34.918, 16.3813)
+
+[node name="AutoAligner" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-2.18557e-07, 5, 0, -5, -2.18557e-07, 0, 0, 0, 5, 18.9356, 0.510239, 18.9127)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="Area3D" type="Area3D" parent="AutoAligner"]
+script = ExtResource("10_vr1i5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AutoAligner/Area3D"]
+transform = Transform3D(1, 3.55271e-15, 0, -3.55271e-15, 1, 0, 0, 0, 1, -0.508337, 0, -0.496057)
+shape = SubResource("BoxShape3D_njel3")
+
+[node name="AutoAligner2" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-2.18557e-07, 5, 0, -5, -2.18557e-07, 0, 0, 0, 5, -32.3451, 0.510239, 18.9127)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner2"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="Area3D" type="Area3D" parent="AutoAligner2"]
+script = ExtResource("10_vr1i5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AutoAligner2/Area3D"]
+transform = Transform3D(1, 3.55271e-15, 0, -3.55271e-15, 1, 0, 0, 0, 1, -0.508337, 0, -0.496057)
+shape = SubResource("BoxShape3D_njel3")
+
+[node name="AutoAligner6" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-2.1855699e-07, 2.1855695e-07, -5, 5, 9.553429e-15, -2.1855699e-07, -5.6464195e-22, -5, -2.1855695e-07, -10.65339, 123.49913, 4.5058527)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner6"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="Area3D" type="Area3D" parent="AutoAligner6"]
+script = ExtResource("10_vr1i5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AutoAligner6/Area3D"]
+transform = Transform3D(1, 3.55271e-15, 0, -3.55271e-15, 1, 0, 0, 0, 1, -0.508337, 0, -0.496057)
+shape = SubResource("BoxShape3D_njel3")
+
+[node name="AutoAligner7" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-5, -1.9106856e-14, 4.3711395e-07, -4.3711395e-07, 2.1855696e-07, -5, -2.3999034e-21, -5, -2.1855696e-07, -10.706873, 76.31611, 4.5058527)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner7"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="CSGBox3D" type="CSGBox3D" parent="AutoAligner7"]
+transform = Transform3D(1, -3.3881286e-23, 1.4210855e-14, -6.867756e-20, 1, -3.5527137e-15, -1.4210855e-14, 3.5527137e-15, 1, -0.08924079, -0.036621273, 0.54343414)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="AutoAligner7"]
+transform = Transform3D(-4.3711424e-08, -4.3711392e-08, 1, 4.3711402e-08, 1, 4.3711395e-08, -1, 4.3711402e-08, -4.3711402e-08, 0.5270519, -0.036621273, -0.42295456)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="AutoAligner10" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-5, -1.9106856e-14, 4.3711395e-07, -4.3711395e-07, 2.1855696e-07, -5, -2.3999034e-21, -5, -2.1855696e-07, -23.21453, 76.31611, 4.5058527)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner10"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="CSGBox3D" type="CSGBox3D" parent="AutoAligner10"]
+transform = Transform3D(1, -3.3881286e-23, 1.4210855e-14, -6.867756e-20, 1, -3.5527137e-15, -1.4210855e-14, 3.5527137e-15, 1, -0.08924079, -0.036621273, 0.54343414)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="AutoAligner10"]
+transform = Transform3D(-4.3711424e-08, -4.3711392e-08, 1, 4.3711402e-08, 1, 4.3711395e-08, -1, 4.3711402e-08, -4.3711402e-08, 0.5270519, -0.036621273, -0.42295456)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="AutoAligner8" type="CSGCylinder3D" parent="."]
+transform = Transform3D(5, 4.3711393e-07, -4.371139e-07, -4.3711393e-07, 2.1855695e-07, -5, -4.371139e-07, 5, 2.1855698e-07, -11.589821, 76.314156, 4.5058527)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner8"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="CSGBox3D" type="CSGBox3D" parent="AutoAligner8"]
+transform = Transform3D(1, -3.3881286e-23, 1.4210855e-14, -6.867756e-20, 1, -3.5527137e-15, -1.4210855e-14, 3.5527137e-15, 1, -0.08924079, -0.036621273, 0.54343414)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="AutoAligner8"]
+transform = Transform3D(-4.3711424e-08, -4.3711392e-08, 1, 4.3711402e-08, 1, 4.3711395e-08, -1, 4.3711402e-08, -4.3711402e-08, 0.5270519, -0.036621273, -0.42295456)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="AutoAligner9" type="CSGCylinder3D" parent="."]
+transform = Transform3D(5, 4.3711393e-07, -4.371139e-07, -4.3711393e-07, 2.1855695e-07, -5, -4.371139e-07, 5, 2.1855698e-07, 2.5482726, 76.314156, 4.5058527)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner9"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="CSGBox3D" type="CSGBox3D" parent="AutoAligner9"]
+transform = Transform3D(1, -3.3881286e-23, 1.4210855e-14, -6.867756e-20, 1, -3.5527137e-15, -1.4210855e-14, 3.5527137e-15, 1, -0.08924079, -0.036621273, 0.54343414)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="AutoAligner9"]
+transform = Transform3D(-4.3711424e-08, -4.3711392e-08, 1, 4.3711402e-08, 1, 4.3711395e-08, -1, 4.3711402e-08, -4.3711402e-08, 0.5270519, -0.036621273, -0.42295456)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="AutoAligner12" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-5, -1.9106854e-14, 4.3711393e-07, 4.3711393e-07, 2.1855693e-07, 5, -3.821371e-14, 5, -2.1855693e-07, -23.21453, 75.35254, 4.5058527)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner12"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="CSGBox3D" type="CSGBox3D" parent="AutoAligner12"]
+transform = Transform3D(1, -3.3881286e-23, 1.4210855e-14, -6.867756e-20, 1, -3.5527137e-15, -1.4210855e-14, 3.5527137e-15, 1, -0.08924079, -0.036621273, 0.54343414)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="AutoAligner12"]
+transform = Transform3D(-4.3711424e-08, -4.3711392e-08, 1, 4.3711402e-08, 1, 4.3711395e-08, -1, 4.3711402e-08, -4.3711402e-08, 0.5270519, -0.036621273, -0.42295456)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="AutoAligner14" type="CSGCylinder3D" parent="."]
+transform = Transform3D(5, 4.3711387e-07, -4.3711395e-07, 4.3711415e-07, -6.556709e-07, 5, 4.371137e-07, -5, -6.556709e-07, 2.548273, 75.35449, 4.5058527)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner14"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="CSGBox3D" type="CSGBox3D" parent="AutoAligner14"]
+transform = Transform3D(1, -3.3881286e-23, 1.4210855e-14, -6.867756e-20, 1, -3.5527137e-15, -1.4210855e-14, 3.5527137e-15, 1, -0.08924079, -0.036621273, 0.54343414)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="AutoAligner14"]
+transform = Transform3D(-4.3711424e-08, -4.3711392e-08, 1, 4.3711402e-08, 1, 4.3711395e-08, -1, 4.3711402e-08, -4.3711402e-08, 0.5270519, -0.036621273, -0.42295456)
+operation = 2
+size = Vector3(2.252304, 2.2646484, 1.0102539)
+
+[node name="AutoAligner3" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-2.18557e-07, 5, 0, 2.18557e-07, 9.55343e-15, 5, 5, 2.18557e-07, -2.18557e-07, -32.2987, 34.8619, 18.9723)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner3"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="Area3D" type="Area3D" parent="AutoAligner3"]
+script = ExtResource("10_vr1i5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AutoAligner3/Area3D"]
+transform = Transform3D(1, -3.55271e-15, -3.55271e-15, 3.55271e-15, 1, 4.61633e-20, 3.55271e-15, 4.23516e-22, 1, -0.508337, 0, -0.496057)
+shape = SubResource("BoxShape3D_njel3")
+
+[node name="AutoAligner4" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-1.7484555e-07, 4, 0, -4, -1.7484555e-07, 0, 0, 0, 4, -9.057486, 17.4142, 13.477937)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner4"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="AutoAligner5" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-1.7484555e-07, 4, -1.7484555e-07, 0, -1.7484555e-07, -4, -4, -1.7484555e-07, 7.642742e-15, -9.171194, 17.392683, 5.546705)
+use_collision = true
+radius = 1.0
+height = 1.6958
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="AutoAligner5"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, -1, 0, -1)
+operation = 2
+radius = 1.0
+height = 2.1
+sides = 64
+
+[node name="Player" parent="." instance=ExtResource("10_rpuu0")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -2.6324015, 4.0858307, 5.329093)

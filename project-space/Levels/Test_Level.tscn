@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://50himndbqeco"]
+[gd_scene load_steps=8 format=3 uid="uid://50himndbqeco"]
 
 [ext_resource type="PackedScene" uid="uid://c0wahkitmgd2h" path="res://Scenes/Player/playerController.tscn" id="1_s5mk4"]
 
@@ -11,6 +11,23 @@ size = Vector3(100, 1, 100)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1w7ek"]
 size = Vector3(100, 1, 100)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s5mk4"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_coq8p"]
+sky_material = SubResource("ProceduralSkyMaterial_s5mk4")
+
+[sub_resource type="Environment" id="Environment_u46fl"]
+background_mode = 1
+background_color = Color(0.111182, 0.320406, 0.394138, 1)
+background_energy_multiplier = 1.9
+sky = SubResource("Sky_coq8p")
+tonemap_mode = 2
+glow_enabled = true
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0
 
 [node name="TestLevel" type="Node3D"]
 
@@ -25,3 +42,10 @@ skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("BoxShape3D_1w7ek")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_u46fl")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
