@@ -16,6 +16,7 @@ public partial class player_controller : CharacterBody3D
     [Export] bool enableControllerLook = true;
     [Export] float controller_look_sensitivity  = 0.05f;
     [Export] float controller_look_smoothing_value  = 5.0f;
+    Vector2 RelativeMouseMotion;
 
     [ExportCategory("General Movement")]
     [Export] bool local_movement  = true;
@@ -62,7 +63,7 @@ public partial class player_controller : CharacterBody3D
     [Export] float crouch_speed_mult  = 0.8f;
     [Export] float crouch_cam_transition_smooth  = 7.0f;
     float CROUCH_JUMP_ADD{get => crouch_translate * 0.9f; set => CROUCH_JUMP_ADD = value;}
-    float _original_capsule_height;
+    float _original_capsule_height = float.PositiveInfinity;
     bool is_crouched = false;
 
     [ExportCategory("Ridgidbody Interaction")]
@@ -112,9 +113,8 @@ public partial class player_controller : CharacterBody3D
         {
             if(@event is InputEventMouseMotion)
             {
-                Rotate(Transform.Basis.Y.Normalized(),-((InputEventMouseMotion)@event).Relative.X * mouse_look_sensitivity); //Rotates around Local up
-                Camera.RotateX(-((InputEventMouseMotion)@event).Relative.Y * mouse_look_sensitivity);
-                Camera.Rotation = Camera.Rotation with { X = Mathf.Clamp(Camera.Rotation.X,float.DegreesToRadians(-90),float.DegreesToRadians(90))};
+                InputEventMouseMotion mouseMotionEvent = (InputEventMouseMotion)@event;
+                RelativeMouseMotion = mouseMotionEvent.Relative;
             }
         }
 
@@ -158,6 +158,15 @@ public partial class player_controller : CharacterBody3D
         {
             _handle_align_to_floor_normals((float)delta);
         }
+
+        if(RelativeMouseMotion.Length() > 0)
+        {
+            Rotate(Transform.Basis.Y.Normalized(),- RelativeMouseMotion.X * mouse_look_sensitivity * (float)delta); //Rotates around Local up
+            Camera.RotateX(-RelativeMouseMotion.Y * mouse_look_sensitivity * (float)delta);
+            Camera.Rotation = Camera.Rotation with { X = Mathf.Clamp(Camera.Rotation.X,float.DegreesToRadians(-90),float.DegreesToRadians(90))};
+            RelativeMouseMotion = Vector2.Zero;
+        }
+        _slide_camera_smooth_back_to_origin((float)delta);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -179,7 +188,7 @@ public partial class player_controller : CharacterBody3D
 
         cam_aligned_wish_dir = Camera.GlobalTransform.Basis * new Vector3(input_dir.X,0,input_dir.Y);
         
-        //_handle_crouch(fDelta);
+        _handle_crouch(fDelta);
         
         if(!_handle_noclip(fDelta) && !_handle_ladder_physics(fDelta))
         {
@@ -217,7 +226,7 @@ public partial class player_controller : CharacterBody3D
             _snap_down_to_stairs_check();
         }
             
-        _slide_camera_smooth_back_to_origin(fDelta);
+        
         
         if (print_velocity_conversion)
         {
@@ -523,6 +532,8 @@ void _handle_controller_look_input(float delta)
 	
     void _handle_crouch(float delta)
     {
+        if(float.IsInfinity(_original_capsule_height)){return;}
+
         bool was_crouched_last_frame = is_crouched;
         Vector3 local_up = local_movement ? GlobalTransform.Basis.Y : Vector3.Up;
         if (Input.IsActionPressed("crouch"))
@@ -552,7 +563,8 @@ void _handle_controller_look_input(float delta)
         }
             
         Head.Position = Head.Position with { Y = Mathf.MoveToward(Head.Position.Y, is_crouched? -crouch_translate : 0,crouch_cam_transition_smooth * delta)};
-        ((CapsuleShape3D)CollisionShape.Shape).Height = _original_capsule_height - (is_crouched ? crouch_translate : _original_capsule_height);
+        ((CapsuleShape3D)CollisionShape.Shape).Height =  is_crouched ? (_original_capsule_height - crouch_translate) : _original_capsule_height;
+        CapsuleShape3D shape = (CapsuleShape3D)CollisionShape.Shape;
         CollisionShape.Position = CollisionShape.Position with { Y = ((CapsuleShape3D)CollisionShape.Shape).Height / 2};
     }
 

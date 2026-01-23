@@ -46,6 +46,7 @@ CollisionShape = NodePath("CollisionShape3D")
 Head = NodePath("HeadOriginalPosition/Head")
 Camera = NodePath("HeadOriginalPosition/Head/CameraSmooth/Camera3D")
 CameraSmooth = NodePath("HeadOriginalPosition/Head/CameraSmooth")
+mouse_look_sensitivity = 10.0
 enableControllerLook = false
 StairsAheadRayCast3d = NodePath("StairsAheadRayCast3d")
 StairsBelowRayCast3d = NodePath("StairsBelowRayCast3d")
