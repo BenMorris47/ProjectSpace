@@ -13,6 +13,7 @@ public partial class player_controller : CharacterBody3D
     [Export] Node3D CameraSmooth;
     [Export] float mouse_look_sensitivity  = 0.006f;
     [Export] bool use_controller_look_smoothing  = true;
+    [Export] bool enableControllerLook = true;
     [Export] float controller_look_sensitivity  = 0.05f;
     [Export] float controller_look_smoothing_value  = 5.0f;
 
@@ -149,7 +150,10 @@ public partial class player_controller : CharacterBody3D
     public override void _Process(double delta)
     {
         base._Process(delta);
-        _handle_controller_look_input((float)delta);
+        if(enableControllerLook)
+        {
+            _handle_controller_look_input((float)delta);
+        }
         if(IsOnFloor() && auto_align_to_floor_normal)
         {
             _handle_align_to_floor_normals((float)delta);
@@ -160,7 +164,7 @@ public partial class player_controller : CharacterBody3D
     {
         base._PhysicsProcess(delta);
         float fDelta = (float)delta;
-
+        
         if (IsOnFloor()) {_last_frame_was_on_floor = Engine.GetPhysicsFrames();}
         
         Vector2 input_dir = Input.GetVector("left","right","up","down").Normalized();
@@ -175,7 +179,7 @@ public partial class player_controller : CharacterBody3D
 
         cam_aligned_wish_dir = Camera.GlobalTransform.Basis * new Vector3(input_dir.X,0,input_dir.Y);
         
-        _handle_crouch(fDelta);
+        //_handle_crouch(fDelta);
         
         if(!_handle_noclip(fDelta) && !_handle_ladder_physics(fDelta))
         {
@@ -205,8 +209,7 @@ public partial class player_controller : CharacterBody3D
             }
         }
             
-        bool snappedUp = false;
-        snappedUp = _snap_up_stairs_check(fDelta);
+        bool snappedUp = _snap_up_stairs_check(fDelta);
         if(!snappedUp)
         {
             _push_away_ridgid_bodies();
@@ -409,11 +412,13 @@ void _handle_controller_look_input(float delta)
             _cur_ladder_climbing = null;
             foreach(Area3D ladder in GetTree().GetNodesInGroup("ladder_area3d"))
             {
-                if(ladder.OverlapsArea(this))
+                if(ladder.OverlapsBody(this))
                 {
                     _cur_ladder_climbing = ladder;
+                    GD.Print("InLadderArea");
                     break;
                 }
+
                     
             }
                 

@@ -46,8 +46,10 @@ CollisionShape = NodePath("CollisionShape3D")
 Head = NodePath("HeadOriginalPosition/Head")
 Camera = NodePath("HeadOriginalPosition/Head/CameraSmooth/Camera3D")
 CameraSmooth = NodePath("HeadOriginalPosition/Head/CameraSmooth")
+enableControllerLook = false
 StairsAheadRayCast3d = NodePath("StairsAheadRayCast3d")
 StairsBelowRayCast3d = NodePath("StairsBelowRayCast3d")
+allow_ladder_boosting = false
 
 [node name="InteractionManager" type="Node" parent="." node_paths=PackedStringArray("InteractShapeCast3D", "Camera")]
 script = ExtResource("2_uywod")
