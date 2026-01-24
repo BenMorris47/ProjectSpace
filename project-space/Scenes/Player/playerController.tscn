@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://c0wahkitmgd2h"]
 
-[ext_resource type="Script" uid="uid://du8nj5eljfc6b" path="res://Scripts/Player/player_controller.cs" id="1_u00wg"]
+[ext_resource type="Script" uid="uid://r3ibqmrrcw40" path="res://Scripts/Player/player_controller_component.cs" id="1_uywod"]
 [ext_resource type="Script" uid="uid://bihfj02odm4wc" path="res://Scripts/Interaction/InteractionManager.cs" id="2_uywod"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pgcxf"]
@@ -39,17 +39,20 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 corner_detail = 5
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("WorldModel", "CollisionShape", "Head", "Camera", "CameraSmooth", "StairsAheadRayCast3d", "StairsBelowRayCast3d")]
-script = ExtResource("1_u00wg")
-WorldModel = NodePath("WorldModel")
-CollisionShape = NodePath("CollisionShape3D")
-Head = NodePath("HeadOriginalPosition/Head")
-Camera = NodePath("HeadOriginalPosition/Head/CameraSmooth/Camera3D")
-CameraSmooth = NodePath("HeadOriginalPosition/Head/CameraSmooth")
+[node name="Player" type="CharacterBody3D"]
+
+[node name="PlayeControllerComp" type="Node" parent="." node_paths=PackedStringArray("CharacterBody", "WorldModel", "CollisionShape", "Head", "Camera", "CameraSmooth", "StairsAheadRayCast3d", "StairsBelowRayCast3d")]
+script = ExtResource("1_uywod")
+CharacterBody = NodePath("..")
+WorldModel = NodePath("../WorldModel")
+CollisionShape = NodePath("../CollisionShape3D")
+Head = NodePath("../HeadOriginalPosition/Head")
+Camera = NodePath("../HeadOriginalPosition/Head/CameraSmooth/Camera3D")
+CameraSmooth = NodePath("../HeadOriginalPosition/Head/CameraSmooth")
 mouse_look_sensitivity = 10.0
-enableControllerLook = false
-StairsAheadRayCast3d = NodePath("StairsAheadRayCast3d")
-StairsBelowRayCast3d = NodePath("StairsBelowRayCast3d")
+controller_look_sensitivity = 0.005
+StairsAheadRayCast3d = NodePath("../StairsAheadRayCast3d")
+StairsBelowRayCast3d = NodePath("../StairsBelowRayCast3d")
 allow_ladder_boosting = false
 
 [node name="InteractionManager" type="Node" parent="." node_paths=PackedStringArray("InteractShapeCast3D", "Camera")]

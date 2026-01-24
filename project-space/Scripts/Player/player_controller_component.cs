@@ -2,9 +2,10 @@ using Godot;
 using System;
 using System.Linq;
 
-public partial class player_controller : CharacterBody3D
+public partial class player_controller_component : Node
 {
     [ExportCategory("World")]
+    [Export] CharacterBody3D CharacterBody;
     [Export] Node3D WorldModel;
     [Export] CollisionShape3D CollisionShape;
     [ExportCategory("Head & Camera")]
@@ -136,6 +137,7 @@ public partial class player_controller : CharacterBody3D
     public override void _Ready()
     {
         base._Ready();
+        //CharacterBody = (CharacterBody3D)GetParent();
         
         _original_capsule_height = ((CapsuleShape3D)CollisionShape.Shape).Height;
 
@@ -150,18 +152,20 @@ public partial class player_controller : CharacterBody3D
     public override void _Process(double delta)
     {
         base._Process(delta);
+        if(CharacterBody == null){GD.PrintErr("No Character set for player"); return;}
+
         if(enableControllerLook)
         {
             _handle_controller_look_input((float)delta);
         }
-        if(IsOnFloor() && auto_align_to_floor_normal)
+        if(CharacterBody.IsOnFloor() && auto_align_to_floor_normal)
         {
             _handle_align_to_floor_normals((float)delta);
         }
 
         if(RelativeMouseMotion.Length() > 0)
         {
-            Rotate(Transform.Basis.Y.Normalized(),- RelativeMouseMotion.X * mouse_look_sensitivity * (float)delta); //Rotates around Local up
+            CharacterBody.Rotate(CharacterBody.Transform.Basis.Y.Normalized(),- RelativeMouseMotion.X * mouse_look_sensitivity * (float)delta); //Rotates around Local up
             Camera.RotateX(-RelativeMouseMotion.Y * mouse_look_sensitivity * (float)delta);
             Camera.Rotation = Camera.Rotation with { X = Mathf.Clamp(Camera.Rotation.X,float.DegreesToRadians(-90),float.DegreesToRadians(90))};
             RelativeMouseMotion = Vector2.Zero;
@@ -172,9 +176,11 @@ public partial class player_controller : CharacterBody3D
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
+        if(CharacterBody == null){GD.PrintErr("No Character set for player"); return;}
+
         float fDelta = (float)delta;
         
-        if (IsOnFloor()) {_last_frame_was_on_floor = Engine.GetPhysicsFrames();}
+        if (CharacterBody.IsOnFloor()) {_last_frame_was_on_floor = Engine.GetPhysicsFrames();}
         
         Vector2 input_dir = Input.GetVector("left","right","up","down").Normalized();
         if(local_movement)
@@ -183,7 +189,7 @@ public partial class player_controller : CharacterBody3D
         }   
         else
         {
-            wish_dir = GlobalTransform.Basis * new Vector3(input_dir.X,0,input_dir.Y);
+            wish_dir = CharacterBody.GlobalTransform.Basis * new Vector3(input_dir.X,0,input_dir.Y);
         }
 
         cam_aligned_wish_dir = Camera.GlobalTransform.Basis * new Vector3(input_dir.X,0,input_dir.Y);
@@ -194,13 +200,13 @@ public partial class player_controller : CharacterBody3D
         {
             if (!_handle_water_physics(fDelta))
             {
-                if (IsOnFloor() || _snapped_to_stairs_last_frame)
+                if (CharacterBody.IsOnFloor() || _snapped_to_stairs_last_frame)
                 {
                     _handle_ground_physics(fDelta);
                     if( Input.IsActionJustPressed("jump") || (auto_bhop && Input.IsActionPressed("jump")))
                     {
-                        Vector3 local_up = GlobalTransform.Basis.Y;
-                        Velocity += local_up * jump_velocity;
+                        Vector3 local_up = CharacterBody.GlobalTransform.Basis.Y;
+                        CharacterBody.Velocity += local_up * jump_velocity;
                     }
                         
                 }
@@ -210,8 +216,8 @@ public partial class player_controller : CharacterBody3D
                 }  
                 if(local_movement)
                 {
-                    Vector3 local_up = GlobalTransform.Basis.Y;
-                    UpDirection = local_up;
+                    Vector3 local_up = CharacterBody.GlobalTransform.Basis.Y;
+                    CharacterBody.UpDirection = local_up;
                     //self.velocity = self.global_transform.basis * self.velocity
                 }
                     
@@ -222,7 +228,7 @@ public partial class player_controller : CharacterBody3D
         if(!snappedUp)
         {
             _push_away_ridgid_bodies();
-            MoveAndSlide();
+            CharacterBody.MoveAndSlide();
             _snap_down_to_stairs_check();
         }
             
@@ -230,15 +236,15 @@ public partial class player_controller : CharacterBody3D
         
         if (print_velocity_conversion)
         {
-            Vector3 global_vel = GlobalTransform.Basis.Inverse() * Velocity;
-		    GD.Print("Local Velocity: ", Velocity, " -> Global Velocity: ", global_vel);
+            Vector3 global_vel = CharacterBody.GlobalTransform.Basis.Inverse() * CharacterBody.Velocity;
+		    GD.Print("Local Velocity: ", CharacterBody.Velocity, " -> Global Velocity: ", global_vel);
         }
             
     } 
 
     void _headbob_effect(float delta)
     {
-        headbob_time += delta * Velocity.Length();
+        headbob_time += delta * CharacterBody.Velocity.Length();
         Camera.Transform = Camera.Transform with {Origin = new Vector3(
             Mathf.Cos(headbob_time * HEADBOB_FREQUENCY * 0.5f) * HEADBOB_MOVE_AMOUNT,
             Mathf.Sin(headbob_time * HEADBOB_FREQUENCY) * HEADBOB_MOVE_AMOUNT,0)};
@@ -266,7 +272,7 @@ void _handle_controller_look_input(float delta)
             _cur_controller_look = target_look;
         }
 
-        Rotate(Transform.Basis.Y.Normalized(),-_cur_controller_look.X * controller_look_sensitivity); //Rotate around the local up
+        CharacterBody.Rotate(CharacterBody.Transform.Basis.Y.Normalized(),-_cur_controller_look.X * controller_look_sensitivity); //Rotate around the local up
         Camera.RotateX(_cur_controller_look.Y * controller_look_sensitivity);
         Camera.Rotation = Camera.Rotation with { X = Mathf.Clamp(Camera.Rotation.X, Mathf.DegToRad(-90),Mathf.DegToRad(90)) };
     }
@@ -294,7 +300,7 @@ void _handle_controller_look_input(float delta)
         CameraSmooth.Position = CameraSmooth.Position with { Z = local_pos.Z};
         CameraSmooth.Position = CameraSmooth.Position with { Y = Mathf.Clamp(CameraSmooth.Position.Y, -0.7f, 0.7f)}; //Clamped incase teleported
 
-        float move_amount = Mathf.Max(Velocity.Length() * delta, walk_speed/2 * delta);
+        float move_amount = Mathf.Max(CharacterBody.Velocity.Length() * delta, walk_speed/2 * delta);
         CameraSmooth.Position = CameraSmooth.Position with { Y = Mathf.MoveToward(CameraSmooth.Position.Y, 0.0f, move_amount)};
 	    _saved_camera_global_pos = CameraSmooth.GlobalPosition;
 	    if (CameraSmooth.Position.Y == 0)
@@ -305,15 +311,16 @@ void _handle_controller_look_input(float delta)
 	
 	void _push_away_ridgid_bodies()
     {
-        Vector3 local_up = local_movement ? GlobalTransform.Basis.Y : Vector3.Up;
-        for (int i = 0; i < GetSlideCollisionCount(); i = i + 1) 
+        Vector3 local_up = local_movement ? CharacterBody.GlobalTransform.Basis.Y : Vector3.Up;
+        for (int i = 0; i < CharacterBody.GetSlideCollisionCount(); i = i + 1) 
         {
-            KinematicCollision3D c = GetSlideCollision(i);
+            KinematicCollision3D c = CharacterBody.GetSlideCollision(i);
+            
             if (c.GetCollider() is RigidBody3D)
             {
                 RigidBody3D cRigidBody = (RigidBody3D)c.GetCollider();
                 Vector3 push_dir = -c.GetNormal();
-                float velocity_diff_in_push_dir = Velocity.Dot(push_dir) - cRigidBody.LinearVelocity.Dot(push_dir);
+                float velocity_diff_in_push_dir = CharacterBody.Velocity.Dot(push_dir) - cRigidBody.LinearVelocity.Dot(push_dir);
                 velocity_diff_in_push_dir = MathF.Max(0.0f,velocity_diff_in_push_dir); //Don't allow negative push force
                 float mass_ratio = MathF.Min(1.0f,my_approx_mass_kg / cRigidBody.Mass);
                 push_dir = push_dir - (push_dir * local_up); //prevents pushing objects above or below (less glitchy)
@@ -328,18 +335,18 @@ void _handle_controller_look_input(float delta)
         bool did_snap = false;
         bool floor_below = StairsBelowRayCast3d.IsColliding() && !is_surface_too_steep(StairsBelowRayCast3d.GetCollisionNormal());
         bool was_on_floor_last_frame = Engine.GetPhysicsFrames() - _last_frame_was_on_floor == 1;
-        Vector3 global_vel = local_movement ? GlobalTransform.Basis.Inverse() * Velocity : Velocity; //Make sure velocity is in world coords
-        if(!IsOnFloor() && global_vel.Y <= 0 && (was_on_floor_last_frame || _snapped_to_stairs_last_frame) && floor_below)
+        Vector3 global_vel = local_movement ? CharacterBody.GlobalTransform.Basis.Inverse() * CharacterBody.Velocity : CharacterBody.Velocity; //Make sure velocity is in world coords
+        if(!CharacterBody.IsOnFloor() && global_vel.Y <= 0 && (was_on_floor_last_frame || _snapped_to_stairs_last_frame) && floor_below)
         {
             PhysicsTestMotionResult3D body_test_result = new PhysicsTestMotionResult3D();
-            Vector3 local_up = local_movement ? GlobalTransform.Basis.Y : Vector3.Up;
-            if (_run_body_test_motion(GlobalTransform,local_up * -max_step_height,body_test_result))
+            Vector3 local_up = local_movement ? CharacterBody.GlobalTransform.Basis.Y : Vector3.Up;
+            if (_run_body_test_motion(CharacterBody.GlobalTransform,local_up * -max_step_height,body_test_result))
             {
                 _save_camera_pos_for_smoothing();
-                Vector3 global_travel = local_movement ? (GlobalTransform.Basis.Inverse() * body_test_result.GetTravel()) : (body_test_result.GetTravel()); //Make sure velocity is in world coords
+                Vector3 global_travel = local_movement ? (CharacterBody.GlobalTransform.Basis.Inverse() * body_test_result.GetTravel()) : (body_test_result.GetTravel()); //Make sure velocity is in world coords
                 float translate_y = global_travel.Y;
-                Position += translate_y * local_up;
-                ApplyFloorSnap();
+                CharacterBody.Position += translate_y * local_up;
+                CharacterBody.ApplyFloorSnap();
                 did_snap = true;
             }
         }
@@ -348,16 +355,16 @@ void _handle_controller_look_input(float delta)
 
     bool _snap_up_stairs_check(float delta)
     {
-        if (!IsOnFloor() && !_snapped_to_stairs_last_frame){return false;}
+        if (!CharacterBody.IsOnFloor() && !_snapped_to_stairs_last_frame){return false;}
 
         // Get the player's "up" direction
-        Vector3 local_up = local_movement ? GlobalTransform.Basis.Y : Vector3.Up;
+        Vector3 local_up = local_movement ? CharacterBody.GlobalTransform.Basis.Y : Vector3.Up;
         // Compute horizontal velocity (ignoring vertical movement)
-        Vector3 horizontal_velocity = Velocity - local_up * Velocity.Dot(local_up);
+        Vector3 horizontal_velocity = CharacterBody.Velocity - local_up * CharacterBody.Velocity.Dot(local_up);
         // Don't snap stairs if the player is actively jumping/moving upwards significantly
         // or not moving forward enough
-        float vertical_speed = Velocity.Project(local_up).Length();
-        float min_horizontal_speed = 0.02f * Velocity.Length();
+        float vertical_speed = CharacterBody.Velocity.Project(local_up).Length();
+        float min_horizontal_speed = 0.02f * CharacterBody.Velocity.Length();
         if (vertical_speed > 0.2) {return false;}//Check player isn't jumping
         
         if (horizontal_velocity.Length() < min_horizontal_speed){return false;} //Check player is moving
@@ -366,16 +373,16 @@ void _handle_controller_look_input(float delta)
         Vector3 expected_move_motion = horizontal_velocity * delta;
 
         // Calculate test position slightly above the expected move position
-        Transform3D step_pos_with_clearance = GlobalTransform.Translated(expected_move_motion + local_up * (max_step_height * 2));
+        Transform3D step_pos_with_clearance = CharacterBody.GlobalTransform.Translated(expected_move_motion + local_up * (max_step_height * 2));
         // Run a test move downwards from this position to check for a step
         KinematicCollision3D down_check_result = new KinematicCollision3D();
-        if (TestMove(step_pos_with_clearance, -local_up * (max_step_height * 2), down_check_result))
+        if (CharacterBody.TestMove(step_pos_with_clearance, -local_up * (max_step_height * 2), down_check_result))
         {
             GodotObject collider = down_check_result.GetCollider();
             if (collider != null && (collider.IsClass("StaticBody3D") || collider.IsClass("CSGShape3D")))
             {
                 // Calculate step height based on local up direction
-                float step_height = (down_check_result.GetPosition() - GlobalPosition).Dot(local_up);
+                float step_height = (down_check_result.GetPosition() - CharacterBody.GlobalPosition).Dot(local_up);
                 // Step must be within valid height ranges
                 if (step_height > max_step_height || step_height <= min_step_height) {return false;}
             
@@ -386,8 +393,8 @@ void _handle_controller_look_input(float delta)
                 if(StairsAheadRayCast3d.IsColliding() && !is_surface_too_steep(StairsAheadRayCast3d.GetCollisionNormal()))
                 {
                     _save_camera_pos_for_smoothing();
-                    GlobalPosition = step_pos_with_clearance.Origin + down_check_result.GetTravel();
-                    ApplyFloorSnap();
+                    CharacterBody.GlobalPosition = step_pos_with_clearance.Origin + down_check_result.GetTravel();
+                    CharacterBody.ApplyFloorSnap();
                     _snapped_to_stairs_last_frame = true;
                     return true;
                 }
@@ -400,28 +407,28 @@ void _handle_controller_look_input(float delta)
     void _handle_align_to_floor_normals(float delta)
     {
         Vector3 normal = StairsBelowRayCast3d.GetCollisionNormal();
-        Vector3 forward = -GlobalTransform.Basis.Z;
+        Vector3 forward = -CharacterBody.GlobalTransform.Basis.Z;
         // Reconstruct the Basis with the new up direction
         Basis  target_basis = new Basis();
         target_basis.Y = normal;
         target_basis.X = forward.Cross(normal).Normalized();
         target_basis.Z = target_basis.X.Cross(normal).Normalized();
-        Quaternion current_rotation = GlobalTransform.Basis.GetRotationQuaternion();
+        Quaternion current_rotation = CharacterBody.GlobalTransform.Basis.GetRotationQuaternion();
         Quaternion target_rotation = target_basis.GetRotationQuaternion();
         Quaternion smoothed_rotation = current_rotation.Slerp(target_rotation, auto_align_rotation_speed * delta);
-        GlobalTransform = GlobalTransform with {Basis = new Basis(smoothed_rotation)};
+        CharacterBody.GlobalTransform = CharacterBody.GlobalTransform with {Basis = new Basis(smoothed_rotation)};
     }
 
     Area3D _cur_ladder_climbing = null;
     bool _handle_ladder_physics(float delta)
     {
-        bool was_climbing_ladder = _cur_ladder_climbing != null && _cur_ladder_climbing.OverlapsBody(this);
+        bool was_climbing_ladder = _cur_ladder_climbing != null && _cur_ladder_climbing.OverlapsBody(CharacterBody);
         if (!was_climbing_ladder)
         {
             _cur_ladder_climbing = null;
             foreach(Area3D ladder in GetTree().GetNodesInGroup("ladder_area3d"))
             {
-                if(ladder.OverlapsBody(this))
+                if(ladder.OverlapsBody(CharacterBody))
                 {
                     _cur_ladder_climbing = ladder;
                     GD.Print("InLadderArea");
@@ -436,7 +443,7 @@ void _handle_controller_look_input(float delta)
            
         
         Transform3D ladder_gtransform = _cur_ladder_climbing.GlobalTransform;
-        Vector3 pos_rel_to_ladder = ladder_gtransform.AffineInverse() * GlobalPosition;
+        Vector3 pos_rel_to_ladder = ladder_gtransform.AffineInverse() * CharacterBody.GlobalPosition;
         
         float forward_move = Input.GetActionStrength("up") - Input.GetActionStrength("down");
         float side_move = Input.GetActionStrength("right") - Input.GetActionStrength("left");
@@ -472,7 +479,7 @@ void _handle_controller_look_input(float delta)
             
         
         //let players step off at the floor
-        if (IsOnFloor() && ladder_climb_vel <= 0){should_dismount = true;}
+        if (CharacterBody.IsOnFloor() && ladder_climb_vel <= 0){should_dismount = true;}
 
         if (should_dismount)
         {
@@ -484,48 +491,48 @@ void _handle_controller_look_input(float delta)
         //Allow jumping off the ladder mid climb
         if (was_climbing_ladder && Input.IsActionJustPressed("jump"))
         {
-            Velocity = _cur_ladder_climbing.GlobalBasis.Z * jump_velocity * ladder_jump_mult; //Jump away from the ladder with jump velocity * some multiplyer
+            CharacterBody.Velocity = _cur_ladder_climbing.GlobalBasis.Z * jump_velocity * ladder_jump_mult; //Jump away from the ladder with jump velocity * some multiplyer
             _cur_ladder_climbing = null;
             return false;
         }
             
         
-        Velocity = ladder_gtransform.Basis * new Vector3(ladder_strafe_vel,ladder_climb_vel,0);
+        CharacterBody.Velocity = ladder_gtransform.Basis * new Vector3(ladder_strafe_vel,ladder_climb_vel,0);
         if (!allow_ladder_boosting) //Stops players from exploiting diaganal movement to go flying
         {
-            Velocity = Velocity.LimitLength(climb_speed);
+            CharacterBody.Velocity = CharacterBody.Velocity.LimitLength(climb_speed);
         }
         
         //snap player to ladder
         pos_rel_to_ladder.Z = 0;
-        GlobalPosition = ladder_gtransform * pos_rel_to_ladder;
+        CharacterBody.GlobalPosition = ladder_gtransform * pos_rel_to_ladder;
         
-        MoveAndSlide();
+        CharacterBody.MoveAndSlide();
         return true;
         
     }
 
     bool _handle_water_physics(float delta)
     {
-        if (GetTree().GetNodesInGroup(water_area_group).All(area => !((Area3D)area).OverlapsBody(this))){return false;}
+        if (GetTree().GetNodesInGroup(water_area_group).All(area => !((Area3D)area).OverlapsBody(CharacterBody))){return false;}
 		
-        Vector3 local_up = local_movement ? GlobalTransform.Basis.Y : Vector3.Up;
+        Vector3 local_up = local_movement ? CharacterBody.GlobalTransform.Basis.Y : Vector3.Up;
         
-        if (!IsOnFloor())
+        if (!CharacterBody.IsOnFloor())
         {
-            Velocity -= local_up * gravity_strength * 0.1f * delta;
+            CharacterBody.Velocity -= local_up * gravity_strength * 0.1f * delta;
         }
             
         
-        Velocity += cam_aligned_wish_dir * get_move_speed() * delta;
+        CharacterBody.Velocity += cam_aligned_wish_dir * get_move_speed() * delta;
         
         if (Input.IsActionPressed("jump"))
         {
-            Velocity += local_up * swim_up_speed * delta;
+            CharacterBody.Velocity += local_up * swim_up_speed * delta;
         }
             
         
-        Velocity = Velocity.Lerp(Vector3.Zero, 2 * delta); //Dampen velocity when hitting the water
+        CharacterBody.Velocity = CharacterBody.Velocity.Lerp(Vector3.Zero, 2 * delta); //Dampen velocity when hitting the water
         
         return true;
     }
@@ -535,19 +542,19 @@ void _handle_controller_look_input(float delta)
         if(float.IsInfinity(_original_capsule_height)){return;}
 
         bool was_crouched_last_frame = is_crouched;
-        Vector3 local_up = local_movement ? GlobalTransform.Basis.Y : Vector3.Up;
+        Vector3 local_up = local_movement ? CharacterBody.GlobalTransform.Basis.Y : Vector3.Up;
         if (Input.IsActionPressed("crouch"))
         {
             is_crouched = true;
         }    
-        else if (is_crouched && !TestMove(GlobalTransform,local_up * crouch_translate))
+        else if (is_crouched && !CharacterBody.TestMove(CharacterBody.GlobalTransform,local_up * crouch_translate))
         {
             is_crouched = false;
         }
             
         
         float translate_y_if_possible = 0.0f;
-        if (was_crouched_last_frame != is_crouched && !IsOnFloor() && !_snapped_to_stairs_last_frame)
+        if (was_crouched_last_frame != is_crouched && !CharacterBody.IsOnFloor() && !_snapped_to_stairs_last_frame)
         {
             translate_y_if_possible = is_crouched ? CROUCH_JUMP_ADD : -CROUCH_JUMP_ADD;
         }
@@ -556,8 +563,8 @@ void _handle_controller_look_input(float delta)
         if (translate_y_if_possible != 0.0)
         {
             KinematicCollision3D result = new KinematicCollision3D();
-            TestMove(GlobalTransform,local_up * translate_y_if_possible,result);
-            GlobalPosition += result.GetTravel();
+            CharacterBody.TestMove(CharacterBody.GlobalTransform,local_up * translate_y_if_possible,result);
+            CharacterBody.GlobalPosition += result.GetTravel();
             Head.GlobalPosition -= result.GetTravel();
             Head.Position = Head.Position with { Y = Mathf.Clamp(Head.Position.Y,-crouch_translate,0)};
         }
@@ -586,8 +593,8 @@ void _handle_controller_look_input(float delta)
             speed *= noclip_sprint_speed_mult;
         }
         
-        Velocity = cam_aligned_wish_dir * (maintain_noclip_velocity? speed : 0.0f);
-        GlobalPosition += maintain_noclip_velocity ? (Velocity * delta) : (cam_aligned_wish_dir * speed * delta);
+        CharacterBody.Velocity = cam_aligned_wish_dir * (maintain_noclip_velocity? speed : 0.0f);
+        CharacterBody.GlobalPosition += maintain_noclip_velocity ? (CharacterBody.Velocity * delta) : (cam_aligned_wish_dir * speed * delta);
         return true;
     }
 
@@ -595,23 +602,23 @@ void _handle_controller_look_input(float delta)
     {
         //When strafing into a wall, + gravity, velocity will be pointing roughly away from the normal
         //this code will back the players up and off the wall, cancelling out strafe + gravity, allowing surfing
-        float backoff = Velocity.Dot(normal) * overbounce;
+        float backoff = CharacterBody.Velocity.Dot(normal) * overbounce;
         if(backoff >= 0){return;}
         Vector3 change = normal * backoff;
-        Velocity -= change;
+        CharacterBody.Velocity -= change;
         
         //Second iteration to ensure the player isn't stuck in the wall
-        float adjust = Velocity.Dot(normal);
+        float adjust = CharacterBody.Velocity.Dot(normal);
         if(adjust < 0.0)
         {
-            Velocity -= normal * adjust;
+            CharacterBody.Velocity -= normal * adjust;
         }
     }
 
     bool is_surface_too_steep(Vector3 normal)
     {
-        Vector3 local_up = local_movement? GlobalTransform.Basis.Y : Vector3.Up;
-	    return normal.AngleTo(local_up) > FloorMaxAngle;
+        Vector3 local_up = local_movement? CharacterBody.GlobalTransform.Basis.Y : Vector3.Up;
+	    return normal.AngleTo(local_up) > CharacterBody.FloorMaxAngle;
     }
 	
 	bool _run_body_test_motion(Transform3D from, Vector3 motion, PhysicsTestMotionResult3D result = null)
@@ -623,41 +630,41 @@ void _handle_controller_look_input(float delta)
         PhysicsTestMotionParameters3D testParams = new PhysicsTestMotionParameters3D();
         testParams.From = from;
         testParams.Motion = motion;
-        return PhysicsServer3D.BodyTestMotion(GetRid(),testParams,result);
+        return PhysicsServer3D.BodyTestMotion(CharacterBody.GetRid(),testParams,result);
     }
 
     void _handle_air_physics(float delta) //Handles in air movement and surfing logic
     {
-        Vector3 local_up = local_movement? GlobalTransform.Basis.Y : Vector3.Up;
-	    Velocity -= local_up * gravity_strength * delta;
+        Vector3 local_up = local_movement? CharacterBody.GlobalTransform.Basis.Y : Vector3.Up;
+	    CharacterBody.Velocity -= local_up * gravity_strength * delta;
 
         //Souce/Quake feeling air movement
         if (use_air_movement)
         {
             float cur_speed_in_wish_dir = 0;
-            Vector3 adjusted_wish_dir = local_movement ? (GlobalTransform.Basis * wish_dir) : wish_dir; //Used to ensure the calculations are made relative to players if needed
-            cur_speed_in_wish_dir = Velocity.Dot(adjusted_wish_dir);
+            Vector3 adjusted_wish_dir = local_movement ? (CharacterBody.GlobalTransform.Basis * wish_dir) : wish_dir; //Used to ensure the calculations are made relative to players if needed
+            cur_speed_in_wish_dir = CharacterBody.Velocity.Dot(adjusted_wish_dir);
             float capped_speed = Mathf.Min((air_move_speed * wish_dir).Length(),air_cap);
             float add_speed_till_cap = capped_speed - cur_speed_in_wish_dir;
             if (add_speed_till_cap > 0)
             {
                 float accel_speed = air_accel * air_move_speed * delta;
                 accel_speed = Mathf.Min(accel_speed, add_speed_till_cap);
-                Velocity += accel_speed * adjusted_wish_dir;
+                CharacterBody.Velocity += accel_speed * adjusted_wish_dir;
             }
         }
 
-        if (use_surfing_movement && IsOnWall())
+        if (use_surfing_movement && CharacterBody.IsOnWall())
         {
-            if (is_surface_too_steep(GetWallNormal()))
+            if (is_surface_too_steep(CharacterBody.GetWallNormal()))
             {
-                MotionMode = MotionModeEnum.Floating;
+                CharacterBody.MotionMode = CharacterBody3D.MotionModeEnum.Floating;
             }
             else
             {
-                MotionMode = MotionModeEnum.Grounded;
+                CharacterBody.MotionMode = CharacterBody3D.MotionModeEnum.Grounded;
             }
-            clip_velocity(GetWallNormal(),1,delta); //Allows surfing
+            clip_velocity(CharacterBody.GetWallNormal(),1,delta); //Allows surfing
         }
     }
 
@@ -666,34 +673,34 @@ void _handle_controller_look_input(float delta)
         if (use_advanced_ground_movement)//For Source/Quake like movement
         {
             float cur_speed_in_wish_dir = 0;
-            Vector3 adjusted_wish_dir = local_movement? (GlobalTransform.Basis * wish_dir) : wish_dir; //Used to ensure the calculations are made relative to players if needed
-            cur_speed_in_wish_dir = Velocity.Dot(adjusted_wish_dir);
+            Vector3 adjusted_wish_dir = local_movement? (CharacterBody.GlobalTransform.Basis * wish_dir) : wish_dir; //Used to ensure the calculations are made relative to players if needed
+            cur_speed_in_wish_dir = CharacterBody.Velocity.Dot(adjusted_wish_dir);
             float add_speed_till_cap = get_move_speed() - cur_speed_in_wish_dir;
             if (add_speed_till_cap > 0)
             {
                 float accel_speed = ground_accel * delta * get_move_speed();
                 accel_speed = Mathf.Min(accel_speed, add_speed_till_cap);
-                Velocity += accel_speed * adjusted_wish_dir;
+                CharacterBody.Velocity += accel_speed * adjusted_wish_dir;
             }
                 
             //Apply Friction
-            float control = Mathf.Max(Velocity.Length(),ground_decel);
+            float control = Mathf.Max(CharacterBody.Velocity.Length(),ground_decel);
             float drop = control * ground_friction * delta;
-            float new_speed = Mathf.Max(Velocity.Length() - drop, 0.0f);
-            if (Velocity.Length() > 0)
+            float new_speed = Mathf.Max(CharacterBody.Velocity.Length() - drop, 0.0f);
+            if (CharacterBody.Velocity.Length() > 0)
             {
-                new_speed /= Velocity.Length();
+                new_speed /= CharacterBody.Velocity.Length();
             }
-            Velocity *= new_speed;
+            CharacterBody.Velocity *= new_speed;
         }  
         else
         {
-            Velocity = Velocity with { X = wish_dir.X * get_move_speed()};
-            Velocity = Velocity with { Z = wish_dir.Z * get_move_speed()};
+            CharacterBody.Velocity = CharacterBody.Velocity with { X = wish_dir.X * get_move_speed()};
+            CharacterBody.Velocity = CharacterBody.Velocity with { Z = wish_dir.Z * get_move_speed()};
             if (local_movement)
             {
-                Velocity = Velocity with {Y = 0};
-                Velocity = GlobalTransform.Basis * Velocity; //Rotate velocity vector from global to local coords
+                CharacterBody.Velocity = CharacterBody.Velocity with {Y = 0};
+                CharacterBody.Velocity = CharacterBody.GlobalTransform.Basis * CharacterBody.Velocity; //Rotate velocity vector from global to local coords
             }
                 
         }
