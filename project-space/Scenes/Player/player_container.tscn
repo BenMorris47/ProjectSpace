@@ -1,0 +1,173 @@
+[gd_scene load_steps=15 format=3 uid="uid://bltlvmms5fo2o"]
+
+[ext_resource type="Script" uid="uid://r3ibqmrrcw40" path="res://Scripts/Player/player_controller_component.cs" id="1_ewgux"]
+[ext_resource type="Script" uid="uid://bihfj02odm4wc" path="res://Scripts/Interaction/InteractionManager.cs" id="2_qg3pm"]
+[ext_resource type="Script" uid="uid://cm5omkfsutgww" path="res://Scripts/Env/WorldObjectManagerComponent.cs" id="5_wwwvb"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pgcxf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2j53v"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_u00wg"]
+material = SubResource("StandardMaterial3D_2j53v")
+radius = 0.2
+height = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vcg3l"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_uywod"]
+material = SubResource("StandardMaterial3D_vcg3l")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_2mkl6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bicot"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ykios"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ugga6"]
+radius = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ewgux"]
+transparency = 1
+albedo_color = Color(0, 0.8235294, 0.58431375, 0.46666667)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_qg3pm"]
+material = SubResource("StandardMaterial3D_ewgux")
+
+[node name="PlayerContainer" type="Node3D"]
+
+[node name="Player" type="CharacterBody3D" parent="."]
+
+[node name="PlayeControllerComp" type="Node" parent="Player" node_paths=PackedStringArray("CharacterBody", "WorldModel", "CollisionShape", "Head", "Camera", "CameraSmooth", "StairsAheadRayCast3d", "StairsBelowRayCast3d")]
+script = ExtResource("1_ewgux")
+CharacterBody = NodePath("..")
+WorldModel = NodePath("../WorldModel")
+CollisionShape = NodePath("../CollisionShape3D")
+Head = NodePath("../../PlayerVisuals/HeadOriginalPosition/Head")
+Camera = NodePath("../../PlayerVisuals/HeadOriginalPosition/Head/CameraSmooth/Camera3D")
+CameraSmooth = NodePath("../../PlayerVisuals/HeadOriginalPosition/Head/CameraSmooth")
+mouse_look_sensitivity = 10.0
+controller_look_sensitivity = 0.005
+StairsAheadRayCast3d = NodePath("../StairsAheadRayCast3d")
+StairsBelowRayCast3d = NodePath("../StairsBelowRayCast3d")
+allow_ladder_boosting = false
+
+[node name="InteractionManager" type="Node" parent="Player" node_paths=PackedStringArray("InteractShapeCast3D", "Camera")]
+script = ExtResource("2_qg3pm")
+InteractShapeCast3D = NodePath("../../PlayerVisuals/HeadOriginalPosition/Head/CameraSmooth/Camera3D/InteractShapeCast3D")
+Camera = NodePath("../../PlayerVisuals/HeadOriginalPosition/Head/CameraSmooth/Camera3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_pgcxf")
+
+[node name="WorldModel" type="Node3D" parent="Player"]
+
+[node name="Face" type="Node3D" parent="Player/WorldModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.608, -0.5)
+
+[node name="Eye" type="MeshInstance3D" parent="Player/WorldModel/Face"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.016, 0)
+mesh = SubResource("SphereMesh_u00wg")
+skeleton = NodePath("../..")
+
+[node name="Eye3" type="MeshInstance3D" parent="Player/WorldModel/Face/Eye"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.104627)
+mesh = SubResource("SphereMesh_uywod")
+skeleton = NodePath("../../..")
+
+[node name="Eye2" type="MeshInstance3D" parent="Player/WorldModel/Face"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.016, 0)
+mesh = SubResource("SphereMesh_u00wg")
+skeleton = NodePath("../..")
+
+[node name="Eye3" type="MeshInstance3D" parent="Player/WorldModel/Face/Eye2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.104627)
+mesh = SubResource("SphereMesh_uywod")
+skeleton = NodePath("../../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/WorldModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_2mkl6")
+
+[node name="StairsAheadRayCast3d" type="RayCast3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.75)
+target_position = Vector3(0, -0.55, 0)
+
+[node name="StairsBelowRayCast3d" type="RayCast3D" parent="Player"]
+target_position = Vector3(0, -0.75, 0)
+
+[node name="Temp_Player_HUD" type="Control" parent="Player"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+mouse_behavior_recursive = 1
+
+[node name="Panel" type="Panel" parent="Player/Temp_Player_HUD"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+mouse_behavior_recursive = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_bicot")
+
+[node name="PlayerVisuals" type="Node3D" parent="."]
+
+[node name="HeadOriginalPosition" type="Node3D" parent="PlayerVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79, 0)
+
+[node name="Head" type="Node3D" parent="PlayerVisuals/HeadOriginalPosition"]
+
+[node name="CameraSmooth" type="Node3D" parent="PlayerVisuals/HeadOriginalPosition/Head"]
+
+[node name="Camera3D" type="Camera3D" parent="PlayerVisuals/HeadOriginalPosition/Head/CameraSmooth"]
+cull_mask = 1048573
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerVisuals/HeadOriginalPosition/Head/CameraSmooth/Camera3D"]
+transform = Transform3D(0.25, 0, 0, 0, -3.16908e-08, -0.25, 0, 0.725, -1.09278e-08, 0, 0, -0.5)
+layers = 2
+mesh = SubResource("CylinderMesh_ykios")
+
+[node name="InteractShapeCast3D" type="ShapeCast3D" parent="PlayerVisuals/HeadOriginalPosition/Head/CameraSmooth/Camera3D"]
+shape = SubResource("SphereShape3D_ugga6")
+target_position = Vector3(0, 0, -2)
+max_results = 2
+collide_with_areas = true
+
+[node name="SpotLight3D" type="SpotLight3D" parent="PlayerVisuals/HeadOriginalPosition/Head/CameraSmooth/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.2824421)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_qg3pm")
+
+[node name="ObjectWorldsManagerComp" type="Node" parent="." node_paths=PackedStringArray("WorldVisuals", "WorldExternalPhysics")]
+script = ExtResource("5_wwwvb")
+WorldVisuals = NodePath("../PlayerVisuals")
+WorldExternalPhysics = NodePath("../Player")

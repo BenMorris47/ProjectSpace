@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://cajl4fvy6lwu7"]
+
+[ext_resource type="Script" uid="uid://blppdro6li5a0" path="res://Scripts/Env/PhysicsWorldSwitchArea.cs" id="1_7y5lq"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tg1h0"]
+size = Vector3(4, 4, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_204yu"]
+albedo_color = Color(0, 0.9508801, 0.33413956, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_yfhvc"]
+material = SubResource("StandardMaterial3D_204yu")
+is_hemisphere = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kevd0"]
+albedo_color = Color(0.9882353, 0.078431375, 0.18039216, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_4u6pd"]
+material = SubResource("StandardMaterial3D_kevd0")
+is_hemisphere = true
+
+[node name="WorldPhysicsDoor" type="Area3D"]
+script = ExtResource("1_7y5lq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_tg1h0")
+debug_color = Color(0.654902, 0.5803922, 0, 1)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.910303)
+shape = SubResource("BoxShape3D_tg1h0")
+debug_color = Color(0.654902, 0.5803922, 0, 1)
+
+[node name="EnterIndicator" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, -2.1855694e-08, 0.5, 0, -0.5, -2.1855694e-08, 0, 0, 0)
+mesh = SubResource("SphereMesh_yfhvc")
+
+[node name="ExitIndicator" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 6.556708e-08, -0.5, 0, 0.5, 6.556708e-08, 0, 0, 0)
+mesh = SubResource("SphereMesh_4u6pd")

@@ -1,0 +1,87 @@
+[gd_scene load_steps=9 format=3 uid="uid://buxxgpainq51u"]
+
+[ext_resource type="Script" uid="uid://blppdro6li5a0" path="res://Scripts/Env/PhysicsWorldSwitchArea.cs" id="1_wqyoe"]
+[ext_resource type="Script" uid="uid://cm5omkfsutgww" path="res://Scripts/Env/WorldObjectManagerComponent.cs" id="3_2pgk4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2pgk4"]
+size = Vector3(7, 5, 7.2010345)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h4ogj"]
+size = Vector3(1, 5, 8.921)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bjbbx"]
+size = Vector3(7, 5, 5.349579)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qwn18"]
+size = Vector3(19.5, 4, 6.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x8ji3"]
+size = Vector3(8.75293, 4, 6.5)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_hu4e4"]
+data = PackedVector3Array(-3.5, -2.5, -10, -3.5, -2, -1, -3.5, -2, 3, -3.5, -2.5, -10, -3, -2, -10, -3.5, 2.5, -10, -3.5, -2.5, -10, -3.5, 2, -1, -3.5, -2, -1, -3, -2, -1, -3, 2, -1, -3, -2, -10, -3, -2, -1, -3.5, -2, -1, -3, 2, -1, -3.5, -2.5, -10, 3, -2, -10, -3, -2, -10, -3, -2, -1, -3, -2, -10, 3, -2, -10, -3.5, -2.5, -10, -3.5, -2.5, 10, 3.5, -2.5, -10, -3, -2, -1, 3, -2, -10, -3, -2, 3, -3.5, -2.5, -10, -3.5, -2, 3, -3.5, -2.5, 10, -3, -2, -1, -3.5, -2, 3, -3.5, -2, -1, -3, -2, -1, -3, -2, 3, -3.5, -2, 3, -3, -2, 3, -3.5, 2, 3, -3.5, -2, 3, -3.5, -2.5, 10, -3.5, -2, 3, -3.5, 2.5, 10, -3.5, -2.5, 10, -3, 2, 10, -3, -2, 10, -3, -2, 3, -3, -2, 10, -3, 2, 10, -3, -2, 3, 3, -2, -10, -3, -2, 10, -3.5, -2.5, 10, -3, -2, 10, 3.5, -2.5, 10, -3.5, 2.5, -10, -3, -2, -10, -3, 2, -10, -3.5, -2.5, -10, -3.5, 2.5, -10, -3.5, 2, -1, -3, 2, -1, -3, 2, -10, -3, -2, -10, -3, 2, -1, -3.5, -2, -1, -3.5, 2, -1, -3.5, 2.5, -10, -3.5, 2, 3, -3.5, 2, -1, -3.5, 2.5, -10, -3, 2, -10, 3.5, 2.5, -10, -3, 2, -1, 3, 2, 10, -3, 2, -10, -3, -2, 3, -3, 2, 3, -3.5, 2, 3, -3.5, 2.5, 10, -3.5, -2, 3, -3.5, 2, 3, -3, -2, 3, -3, 2, 10, -3, 2, 3, -3.5, -2.5, 10, -3.5, 2.5, 10, -3, 2, 10, -3, 2, -1, -3.5, 2, -1, -3, 2, 3, -3, 2, 3, -3.5, 2, -1, -3.5, 2, 3, -3.5, 2.5, -10, -3.5, 2.5, 10, -3.5, 2, 3, -3, 2, -1, -3, 2, 3, 3, 2, 10, -3.5, 2.5, -10, 3.5, 2.5, 10, -3.5, 2.5, 10, -3, 2, 3, -3, 2, 10, 3, 2, 10, -3.5, 2.5, 10, 3, 2, 10, -3, 2, 10, -3.5, -2.5, -10, 3.5, -2.5, -10, 3, -2, -10, 3, -2, -1, -3, -2, 10, 3, -2, -10, 3.5, -2.5, -10, 3.5, -2, 3, 3.5, -2, -1, 3.5, -2.5, -10, 3, 2, -10, 3, -2, -10, 3, -2, -1, 3, -2, -10, 3, 2, -10, 3.5, -2.5, -10, 3.5, -2, -1, 3.5, 2.5, -10, 3, -2, -1, 3.5, 2, -1, 3.5, -2, -1, -3.5, -2.5, 10, 3.5, -2.5, 10, 3.5, -2.5, -10, 3, -2, -1, 3, -2, 3, -3, -2, 10, 3, -2, 3, 3, -2, 10, -3, -2, 10, 3.5, -2.5, 10, -3, -2, 10, 3, -2, 10, 3.5, -2.5, -10, 3.5, -2.5, 10, 3.5, -2, 3, 3, -2, -1, 3.5, -2, -1, 3, -2, 3, 3, -2, 3, 3.5, -2, -1, 3.5, -2, 3, 3, -2, 3, 3.5, -2, 3, 3, 2, 3, 3, -2, 3, 3, 2, 3, 3, -2, 10, 3.5, -2.5, 10, 3.5, 2, 3, 3.5, -2, 3, 3.5, -2.5, 10, 3, -2, 10, 3.5, 2.5, 10, 3.5, 2.5, -10, -3, 2, -10, 3, 2, -10, 3, 2, -1, 3, 2, -10, -3, 2, -10, 3, 2, -1, -3, 2, -10, 3, 2, 3, -3.5, 2.5, -10, 3.5, 2.5, -10, 3.5, 2.5, 10, 3.5, -2.5, -10, 3.5, 2.5, -10, 3, 2, -10, 3, -2, -1, 3, 2, -10, 3, 2, -1, 3.5, 2.5, -10, 3.5, -2, -1, 3.5, 2, -1, 3, -2, -1, 3, 2, -1, 3.5, 2, -1, 3.5, 2.5, -10, 3.5, 2, -1, 3.5, 2, 3, 3, 2, 3, -3, 2, -10, 3, 2, 10, -3.5, 2.5, 10, 3.5, 2.5, 10, 3, 2, 10, 3, 2, 3, 3.5, -2, 3, 3.5, 2, 3, 3, 2, 3, 3, 2, 10, 3, -2, 10, 3.5, -2.5, 10, 3.5, 2.5, 10, 3.5, 2, 3, 3.5, 2.5, 10, 3, -2, 10, 3, 2, 10, 3, 2, -1, 3.5, 2, 3, 3.5, 2, -1, 3, 2, -1, 3, 2, 3, 3.5, 2, 3, 3.5, 2.5, -10, 3.5, 2, 3, 3.5, 2.5, 10)
+
+[node name="ShipTestContainer" type="Node3D"]
+
+[node name="ShipVisuals" type="Node3D" parent="."]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="ShipVisuals"]
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="ShipVisuals/CSGCombiner3D"]
+size = Vector3(7, 5, 20)
+
+[node name="CSGCombiner3D2" type="CSGCombiner3D" parent="ShipVisuals/CSGCombiner3D/CSGBox3D2"]
+operation = 2
+
+[node name="CSGBox3D" type="CSGBox3D" parent="ShipVisuals/CSGCombiner3D/CSGBox3D2/CSGCombiner3D2"]
+size = Vector3(6, 4, 21)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="ShipVisuals/CSGCombiner3D/CSGBox3D2/CSGCombiner3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+size = Vector3(7, 4, 4)
+
+[node name="ShipExternalPhysics" type="CharacterBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ShipExternalPhysics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.888848)
+shape = SubResource("BoxShape3D_2pgk4")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="ShipExternalPhysics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.77938604)
+shape = SubResource("BoxShape3D_h4ogj")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ShipExternalPhysics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.576082)
+shape = SubResource("BoxShape3D_bjbbx")
+
+[node name="WorldSwitchArea" type="Area3D" parent="ShipExternalPhysics" node_paths=PackedStringArray("LinkedWorldManager")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 0, 0)
+script = ExtResource("1_wqyoe")
+LinkedWorldManager = NodePath("../../ObjectWorldsManagerComp")
+IsEntryDoor = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ShipExternalPhysics/WorldSwitchArea"]
+shape = SubResource("BoxShape3D_qwn18")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ShipExternalPhysics/WorldSwitchArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.373535, 0, 0)
+shape = SubResource("BoxShape3D_x8ji3")
+
+[node name="ShipInternalPhysics" type="StaticBody3D" parent="."]
+
+[node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="ShipInternalPhysics"]
+shape = SubResource("ConcavePolygonShape3D_hu4e4")
+
+[node name="WorldSwitchArea" type="Area3D" parent="ShipInternalPhysics" node_paths=PackedStringArray("LinkedWorldManager")]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 0, 0)
+script = ExtResource("1_wqyoe")
+LinkedWorldManager = NodePath("../../ObjectWorldsManagerComp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ShipInternalPhysics/WorldSwitchArea"]
+shape = SubResource("BoxShape3D_qwn18")
+
+[node name="ObjectWorldsManagerComp" type="Node" parent="." node_paths=PackedStringArray("WorldVisuals", "WorldExternalPhysics", "WorldInternalPhysics")]
+script = ExtResource("3_2pgk4")
+WorldVisuals = NodePath("../ShipVisuals")
+WorldExternalPhysics = NodePath("../ShipExternalPhysics")
+WorldInternalPhysics = NodePath("../ShipInternalPhysics")
