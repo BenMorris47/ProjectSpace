@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://voga7x77iqhw"]
+[gd_scene load_steps=57 format=3 uid="uid://voga7x77iqhw"]
 
 [ext_resource type="Texture2D" uid="uid://bi6ny26bsfrxq" path="res://Textures/GridTextures/Light/texture_08.png" id="1_sasra"]
 [ext_resource type="Texture2D" uid="uid://b48c4nayv0jhh" path="res://Textures/GridTextures/Green/texture_07.png" id="2_sasra"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://buxxgpainq51u" path="res://Scenes/Ships/ship_test.tscn" id="11_b8uvj"]
 [ext_resource type="PackedScene" uid="uid://bltlvmms5fo2o" path="res://Scenes/Player/player_container.tscn" id="12_4u7n5"]
 [ext_resource type="PackedScene" uid="uid://bwtl8a4ju6aw0" path="res://Scenes/Ships/pushable_cube_test.tscn" id="12_qflrp"]
+[ext_resource type="PackedScene" uid="uid://c4oxau1mkucmt" path="res://Scenes/Ships/pushable_sphere_test.tscn" id="13_4u7n5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sasra"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -1113,14 +1114,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8989525, 8.642494, 1.79006
 [node name="ShipTestContainer" parent="." instance=ExtResource("11_b8uvj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 2.5581508, -17)
 
-[node name="WorldSwitchArea" parent="ShipTestContainer/ShipExternalPhysics" index="3" node_paths=PackedStringArray("BodiesToIgnore")]
-BodiesToIgnore = []
-
 [node name="ShipInternalPhysics" parent="ShipTestContainer" index="2"]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -22.7818, 0, 0)
 
-[node name="WorldSwitchArea" parent="ShipTestContainer/ShipInternalPhysics" index="1" node_paths=PackedStringArray("BodiesToIgnore")]
-BodiesToIgnore = []
+[node name="PushableSphereTest" parent="." instance=ExtResource("13_4u7n5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.637161, 1.0000005, -11.7175255)
+
+[node name="PushableSphereTest2" parent="." instance=ExtResource("13_4u7n5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.621347, 1.0000005, -14.646502)
 
 [connection signal="OnHoverEnded" from="Button/InteractableComponent" to="Button/InteractOutline" method="set_visible" binds= [false]]
 [connection signal="OnHoverStarted" from="Button/InteractableComponent" to="Button/InteractOutline" method="set_visible" binds= [true]]

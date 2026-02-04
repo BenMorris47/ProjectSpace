@@ -6,6 +6,8 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pgcxf"]
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_2mkl6"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2j53v"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_u00wg"]
@@ -20,8 +22,6 @@ albedo_color = Color(0, 0, 0, 1)
 material = SubResource("StandardMaterial3D_vcg3l")
 radius = 0.1
 height = 0.2
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_2mkl6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bicot"]
 content_margin_left = 0.0
@@ -74,6 +74,11 @@ Camera = NodePath("../../PlayerVisuals/HeadOriginalPosition/Head/CameraSmooth/Ca
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_pgcxf")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_2mkl6")
+skeleton = NodePath("../WorldModel")
+
 [node name="WorldModel" type="Node3D" parent="Player"]
 
 [node name="Face" type="Node3D" parent="Player/WorldModel"]
@@ -98,10 +103,6 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.104627)
 mesh = SubResource("SphereMesh_uywod")
 skeleton = NodePath("../../..")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/WorldModel"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("CapsuleMesh_2mkl6")
 
 [node name="StairsAheadRayCast3d" type="RayCast3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.75)

@@ -1,40 +1,40 @@
-[gd_scene load_steps=7 format=3 uid="uid://bwtl8a4ju6aw0"]
+[gd_scene load_steps=7 format=3 uid="uid://c4oxau1mkucmt"]
 
-[ext_resource type="Script" uid="uid://cm5omkfsutgww" path="res://Scripts/Env/WorldObjectManagerComponent.cs" id="1_huk73"]
+[ext_resource type="Script" uid="uid://cm5omkfsutgww" path="res://Scripts/Env/WorldObjectManagerComponent.cs" id="1_txomd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_txomd"]
 albedo_color = Color(0.21230483, 0.21230483, 0.21230483, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_45nsv"]
+[sub_resource type="SphereMesh" id="SphereMesh_txomd"]
 material = SubResource("StandardMaterial3D_txomd")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_uqj5l"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_1jfd1"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_huk73"]
 transparency = 1
 albedo_color = Color(0.31764707, 0.8666667, 0.5294118, 0.45490196)
 
-[sub_resource type="BoxMesh" id="BoxMesh_2i7tp"]
+[sub_resource type="SphereMesh" id="SphereMesh_jo4r8"]
 material = SubResource("StandardMaterial3D_huk73")
 
-[node name="PushableCubeTest" type="Node3D"]
+[node name="PushableSphereTest" type="Node3D"]
 
 [node name="ObjectWorldsManagerComp" type="Node" parent="." node_paths=PackedStringArray("WorldVisuals", "WorldExternalPhysics")]
-script = ExtResource("1_huk73")
+script = ExtResource("1_txomd")
 WorldVisuals = NodePath("../CubeVisuals")
 WorldExternalPhysics = NodePath("../CubePhysics")
 
 [node name="CubeVisuals" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_45nsv")
+mesh = SubResource("SphereMesh_txomd")
 skeleton = NodePath("")
 
 [node name="CubePhysics" type="RigidBody3D" parent="."]
 mass = 30.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CubePhysics"]
-shape = SubResource("BoxShape3D_uqj5l")
+shape = SubResource("SphereShape3D_1jfd1")
 
 [node name="CubeVisuals" type="MeshInstance3D" parent="CubePhysics"]
 transform = Transform3D(0.999, 0, 0, 0, 0.999, 0, 0, 0, 0.999, 0, 0, 0)
-mesh = SubResource("BoxMesh_2i7tp")
+mesh = SubResource("SphereMesh_jo4r8")
 skeleton = NodePath("")
